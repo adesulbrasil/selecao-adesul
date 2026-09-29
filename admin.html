@@ -1,242 +1,696 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Seleção Adesul | Painel</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<title>Seleção Adesul | Painel RH</title>
 
-  <style>
-    * { box-sizing: border-box; }
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f4f6;
-      color: #181818;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    .container {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 20px;
-    }
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f3f4f6;
+  color: #202020;
+}
 
-    .card {
-      background: white;
-      border-radius: 10px;
-      padding: 28px;
-      box-shadow: 0 2px 10px rgba(0,0,0,.08);
-      margin-bottom: 20px;
-    }
+.topo {
+  background: #111;
+  color: white;
+  padding: 22px 30px;
+}
 
-    h1 { margin-top: 0; }
-    h2 { margin-top: 0; }
+.topo h1 {
+  margin: 0;
+  font-size: 25px;
+}
 
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 6px 0 14px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-    }
+.topo p {
+  margin: 5px 0 0;
+  color: #bbb;
+}
 
-    button {
-      padding: 12px 20px;
-      background: #111;
-      color: white;
-      border: 0;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 15px;
-    }
+.container {
+  max-width: 1250px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
 
-    button:hover { background: #333; }
+.card {
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+  margin-bottom: 20px;
+}
 
-    .sair {
-      background: #777;
-      float: right;
-    }
+/* LOGIN */
 
-    #erro {
-      color: #b00020;
-      margin-top: 12px;
-    }
+#login {
+  max-width: 450px;
+  margin: 70px auto;
+}
 
-    #painel { display: none; }
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+}
 
-    .tabela {
-      overflow-x: auto;
-    }
+button {
+  border: 0;
+  border-radius: 6px;
+  background: #111;
+  color: white;
+  padding: 11px 18px;
+  cursor: pointer;
+  font-size: 14px;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
+button:hover {
+  background: #333;
+}
 
-    th, td {
-      text-align: left;
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-      vertical-align: top;
-    }
+#erro {
+  color: #b00020;
+  margin-top: 15px;
+}
 
-    th {
-      background: #111;
-      color: white;
-    }
+#painel {
+  display: none;
+}
 
-    tr:hover {
-      background: #f7f7f7;
-    }
+/* CONTROLES */
 
-    .contador {
-      font-size: 18px;
-      margin: 15px 0;
-    }
-  </style>
+.barra {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.barra input,
+.barra select {
+  margin: 0;
+  height: 44px;
+}
+
+select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: white;
+  font-size: 15px;
+}
+
+.resumo {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.numero {
+  background: white;
+  border-radius: 8px;
+  padding: 15px 20px;
+  min-width: 170px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+.numero strong {
+  display: block;
+  font-size: 27px;
+}
+
+/* CANDIDATOS */
+
+#lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px,1fr));
+  gap: 15px;
+}
+
+.candidato {
+  background: white;
+  border-radius: 9px;
+  padding: 20px;
+  border-left: 5px solid #111;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  cursor: pointer;
+}
+
+.candidato:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 13px rgba(0,0,0,.12);
+}
+
+.candidato h3 {
+  margin: 0 0 8px;
+}
+
+.candidato p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.tags {
+  margin-top: 12px;
+}
+
+.tag {
+  display: inline-block;
+  background: #eee;
+  border-radius: 20px;
+  padding: 5px 9px;
+  margin: 3px 3px 0 0;
+  font-size: 12px;
+}
+
+/* MODAL */
+
+#modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.modal-box {
+  background: white;
+  max-width: 750px;
+  margin: 20px auto;
+  border-radius: 10px;
+  padding: 30px;
+}
+
+.modal-box h2 {
+  margin-top: 0;
+}
+
+.linha {
+  padding: 9px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.fechar {
+  float: right;
+  background: #777;
+}
+
+.sair {
+  background: #777;
+}
+
+@media(max-width:700px) {
+  .barra {
+    grid-template-columns: 1fr;
+  }
+
+  .resumo {
+    display: block;
+  }
+
+  .numero {
+    margin-bottom: 10px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="topo">
+  <h1>ADESUL | Seleção de Pessoas</h1>
+  <p>Painel interno de candidatos</p>
+</div>
 
-  <div id="login" class="card">
-    <h1>Seleção Adesul</h1>
-    <h2>Acesso interno</h2>
 
-    <label>E-mail</label>
-    <input type="email" id="email">
+<!-- LOGIN -->
 
-    <label>Senha</label>
-    <input type="password" id="senha">
+<div id="login" class="card">
 
-    <button onclick="entrar()">ENTRAR</button>
+  <h2>Acesso interno</h2>
 
-    <div id="erro"></div>
+  <label>E-mail</label>
+  <input
+    id="email"
+    type="email"
+    placeholder="seuemail@adesul.com"
+  >
+
+  <label>Senha</label>
+  <input
+    id="senha"
+    type="password"
+    placeholder="Senha"
+  >
+
+  <button onclick="entrar()">ENTRAR</button>
+
+  <div id="erro"></div>
+
+</div>
+
+
+<!-- PAINEL -->
+
+<div id="painel" class="container">
+
+  <div class="card">
+
+    <button class="sair" onclick="sair()" style="float:right">
+      SAIR
+    </button>
+
+    <h2>Banco de candidatos</h2>
+
+    <div class="barra">
+
+      <input
+        id="busca"
+        type="text"
+        placeholder="Buscar por nome, bairro ou cidade..."
+        oninput="filtrar()"
+      >
+
+      <select id="filtroArea" onchange="filtrar()">
+        <option value="">Todas as experiências</option>
+        <option>Marcenaria</option>
+        <option>Serralheria</option>
+        <option>Pintura</option>
+        <option>Montagem</option>
+        <option>Acabamento gráfico</option>
+        <option>Adesivagem</option>
+        <option>Funilaria</option>
+        <option>Tapeçaria</option>
+        <option>Elétrica</option>
+        <option>Obras</option>
+      </select>
+
+      <button onclick="carregarCandidatos()">
+        ATUALIZAR
+      </button>
+
+    </div>
+
   </div>
 
-  <div id="painel">
 
-    <div class="card">
-      <button class="sair" onclick="sair()">SAIR</button>
+  <div class="resumo">
 
-      <h1>Candidatos</h1>
-      <div class="contador" id="contador"></div>
-
-      <div class="tabela">
-        <table>
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Idade</th>
-              <th>Bairro</th>
-              <th>Cidade</th>
-              <th>Telefone</th>
-              <th>Experiência</th>
-              <th>Áreas</th>
-              <th>Interesse</th>
-            </tr>
-          </thead>
-
-          <tbody id="lista"></tbody>
-        </table>
-      </div>
+    <div class="numero">
+      <strong id="total">0</strong>
+      candidatos
     </div>
+
+    <div class="numero">
+      <strong id="exibidos">0</strong>
+      exibidos
+    </div>
+
+  </div>
+
+
+  <div id="lista"></div>
+
+</div>
+
+
+<!-- FICHA COMPLETA -->
+
+<div id="modal">
+
+  <div class="modal-box">
+
+    <button class="fechar" onclick="fecharFicha()">
+      FECHAR
+    </button>
+
+    <h2 id="fichaNome">Candidato</h2>
+
+    <div id="ficha"></div>
 
   </div>
 
 </div>
 
-<script>
-const SUPABASE_URL = "https://hetkropzbpsybgbavwfd.supabase.co";
-const SUPABASE_KEY = "sb_publishable_rhrhtkOhmIX8DpF1QFvEEg_IdaTVtgu";
 
-const supabaseClient = supabase.createClient(
+<script>
+
+const SUPABASE_URL =
+"https://hetkropzbpsybgbavwfd.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_rhrhtkOhmIX8DpF1QFvEEg_IdaTVtgu";
+
+const supabaseClient =
+supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
 
+let candidatos = [];
+
+
+/* LOGIN */
+
 async function entrar() {
 
-  const email = document.getElementById("email").value;
-  const senha = document.getElementById("senha").value;
-  const erro = document.getElementById("erro");
+  const email =
+    document.getElementById("email").value.trim();
+
+  const senha =
+    document.getElementById("senha").value;
+
+  const erro =
+    document.getElementById("erro");
+
+  erro.innerText = "Entrando...";
+
+  const { error } =
+    await supabaseClient.auth.signInWithPassword({
+      email,
+      password: senha
+    });
+
+  if(error) {
+
+    console.error(error);
+
+    erro.innerText =
+      "Não foi possível entrar. Verifique o e-mail e a senha.";
+
+    return;
+  }
 
   erro.innerText = "";
 
-  const { error } = await supabaseClient.auth.signInWithPassword({
-    email: email,
-    password: senha
-  });
-
-  if (error) {
-    erro.innerText = "E-mail ou senha incorretos.";
-    return;
-  }
-
-  mostrarPainel();
+  abrirPainel();
 }
 
-async function mostrarPainel() {
 
-  document.getElementById("login").style.display = "none";
-  document.getElementById("painel").style.display = "block";
+/* ABRIR PAINEL */
 
-  const { data, error } = await supabaseClient
-    .from("candidatos")
-    .select("*")
-    .order("criado_em", { ascending: false });
+async function abrirPainel() {
 
-  if (error) {
-    alert("Erro ao carregar candidatos.");
+  document.getElementById("login").style.display =
+    "none";
+
+  document.getElementById("painel").style.display =
+    "block";
+
+  await carregarCandidatos();
+}
+
+
+/* CARREGAR BANCO */
+
+async function carregarCandidatos() {
+
+  const { data, error } =
+    await supabaseClient
+      .from("candidatos")
+      .select("*")
+      .order("criado_em", {
+        ascending:false
+      });
+
+  if(error) {
+
     console.error(error);
+
+    alert(
+      "Não foi possível carregar os candidatos."
+    );
+
     return;
   }
 
-  document.getElementById("contador").innerText =
-    data.length + " candidato(s) cadastrado(s)";
+  candidatos = data || [];
 
-  const lista = document.getElementById("lista");
-  lista.innerHTML = "";
+  document.getElementById("total").innerText =
+    candidatos.length;
 
-  data.forEach(c => {
+  filtrar();
+}
 
-    const tr = document.createElement("tr");
 
-    tr.innerHTML = `
-      <td>${c.nome_completo ?? ""}</td>
-      <td>${c.idade ?? ""}</td>
-      <td>${c.bairro ?? ""}</td>
-      <td>${c.cidade ?? ""}</td>
-      <td>${c.telefone ?? ""}</td>
-      <td>${c.tempo_experiencia ?? ""}</td>
-      <td>${Array.isArray(c.areas_experiencia) ? c.areas_experiencia.join(", ") : (c.areas_experiencia ?? "")}</td>
-      <td>${Array.isArray(c.interesses) ? c.interesses.join(", ") : (c.interesses ?? "")}</td>
+/* FILTROS */
+
+function filtrar() {
+
+  const busca =
+    document.getElementById("busca")
+      .value
+      .toLowerCase();
+
+  const area =
+    document.getElementById("filtroArea")
+      .value
+      .toLowerCase();
+
+  const filtrados =
+    candidatos.filter(c => {
+
+      const texto =
+        JSON.stringify(c).toLowerCase();
+
+      const bateBusca =
+        !busca ||
+        texto.includes(busca);
+
+      const experiencias =
+        Array.isArray(c.areas_experiencia)
+          ? c.areas_experiencia.join(" ")
+          : (c.areas_experiencia || "");
+
+      const bateArea =
+        !area ||
+        experiencias
+          .toLowerCase()
+          .includes(area);
+
+      return bateBusca && bateArea;
+
+    });
+
+  document.getElementById("exibidos").innerText =
+    filtrados.length;
+
+  desenhar(filtrados);
+}
+
+
+/* DESENHAR CARDS */
+
+function desenhar(lista) {
+
+  const div =
+    document.getElementById("lista");
+
+  div.innerHTML = "";
+
+  if(lista.length === 0) {
+
+    div.innerHTML =
+      "<div class='card'>Nenhum candidato encontrado.</div>";
+
+    return;
+  }
+
+  lista.forEach(c => {
+
+    const card =
+      document.createElement("div");
+
+    card.className = "candidato";
+
+    const experiencias =
+      Array.isArray(c.areas_experiencia)
+        ? c.areas_experiencia
+        : [];
+
+    let tags = "";
+
+    experiencias.forEach(a => {
+      tags +=
+        `<span class="tag">${esc(a)}</span>`;
+    });
+
+    card.innerHTML = `
+      <h3>${esc(c.nome_completo || "Sem nome")}</h3>
+
+      <p>
+        <strong>Idade:</strong>
+        ${esc(c.idade ?? "-")}
+      </p>
+
+      <p>
+        <strong>Local:</strong>
+        ${esc(c.bairro || "-")}
+        ${c.cidade ? " - " + esc(c.cidade) : ""}
+      </p>
+
+      <p>
+        <strong>Experiência:</strong>
+        ${esc(c.tempo_experiencia || "-")}
+      </p>
+
+      <div class="tags">
+        ${tags}
+      </div>
     `;
 
-    lista.appendChild(tr);
+    card.onclick =
+      () => abrirFicha(c);
+
+    div.appendChild(card);
+
   });
 }
 
-async function sair() {
-  await supabaseClient.auth.signOut();
-  location.reload();
+
+/* FICHA */
+
+function abrirFicha(c) {
+
+  document.getElementById("fichaNome")
+    .innerText =
+      c.nome_completo || "Candidato";
+
+  const ficha =
+    document.getElementById("ficha");
+
+  ficha.innerHTML = "";
+
+  const nomes = {
+
+    idade:"Idade",
+
+    bairro:"Bairro",
+
+    cidade:"Cidade",
+
+    telefone:"WhatsApp / Telefone",
+
+    tempo_experiencia:
+      "Tempo de experiência",
+
+    areas_experiencia:
+      "Conhecimentos / Experiências",
+
+    interesses:
+      "Áreas de interesse",
+
+    hora_extra:
+      "Disponibilidade para hora extra",
+
+    viagem:
+      "Disponibilidade para viagens",
+
+    observacoes:
+      "Observações",
+
+    criado_em:
+      "Cadastro realizado em"
+
+  };
+
+  Object.keys(c).forEach(campo => {
+
+    if(
+      campo === "id" ||
+      campo === "nome_completo"
+    ) return;
+
+    let valor = c[campo];
+
+    if(valor === null ||
+       valor === undefined ||
+       valor === "") return;
+
+    if(Array.isArray(valor))
+      valor = valor.join(", ");
+
+    if(typeof valor === "boolean")
+      valor = valor ? "Sim" : "Não";
+
+    const linha =
+      document.createElement("div");
+
+    linha.className = "linha";
+
+    linha.innerHTML =
+      `<strong>${esc(nomes[campo] || campo)}:</strong>
+       ${esc(valor)}`;
+
+    ficha.appendChild(linha);
+
+  });
+
+  document.getElementById("modal")
+    .style.display = "block";
 }
+
+
+function fecharFicha() {
+
+  document.getElementById("modal")
+    .style.display = "none";
+
+}
+
+
+/* LOGOUT */
+
+async function sair() {
+
+  await supabaseClient.auth.signOut();
+
+  location.reload();
+
+}
+
+
+/* SEGURANÇA DE TEXTO */
+
+function esc(valor) {
+
+  return String(valor ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* VERIFICAR SESSÃO */
 
 async function verificarLogin() {
 
-  const { data } = await supabaseClient.auth.getSession();
+  const { data } =
+    await supabaseClient.auth.getSession();
 
-  if (data.session) {
-    mostrarPainel();
-  }
+  if(data.session)
+    abrirPainel();
+
 }
 
 verificarLogin();
+
 </script>
 
 </body>
