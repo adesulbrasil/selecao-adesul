@@ -3,366 +3,207 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Seleção Adesul | Painel RH</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-* { box-sizing: border-box; }
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f3f4f6;color:#202020}
+.topo{background:#111;color:white;padding:22px 30px}
+.topo h1{margin:0;font-size:25px}
+.topo p{margin:5px 0 0;color:#bbb}
+.container{max-width:1350px;margin:30px auto;padding:0 20px}
+.card{background:white;border-radius:10px;padding:25px;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:20px}
 
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f3f4f6;
-  color: #202020;
+#login{max-width:450px;margin:70px auto}
+
+input,textarea{
+width:100%;
+padding:12px;
+margin:6px 0 15px;
+border:1px solid #ccc;
+border-radius:6px;
+font-size:15px;
+font-family:Arial,Helvetica,sans-serif
 }
 
-.topo {
-  background: #111;
-  color: white;
-  padding: 22px 30px;
+textarea{min-height:120px;resize:vertical}
+
+button{
+border:0;
+border-radius:6px;
+background:#111;
+color:white;
+padding:11px 18px;
+cursor:pointer;
+font-size:14px
 }
 
-.topo h1 {
-  margin: 0;
-  font-size: 25px;
+button:hover{background:#333}
+button:disabled{opacity:.6;cursor:wait}
+#erro{color:#b00020;margin-top:15px}
+#painel{display:none}
+
+.barra{
+display:grid;
+grid-template-columns:2fr 1fr 1fr auto;
+gap:12px;
+align-items:center
 }
 
-.topo p {
-  margin: 5px 0 0;
-  color: #bbb;
+.barra input,.barra select{margin:0;height:44px}
+
+select{
+width:100%;
+padding:10px;
+border:1px solid #ccc;
+border-radius:6px;
+background:white;
+font-size:15px
 }
 
-.container {
-  max-width: 1350px;
-  margin: 30px auto;
-  padding: 0 20px;
+.resumo{display:flex;gap:15px;margin:20px 0;flex-wrap:wrap}
+
+.numero{
+background:white;
+border-radius:8px;
+padding:15px 20px;
+min-width:170px;
+box-shadow:0 2px 8px rgba(0,0,0,.06)
 }
 
-.card {
-  background: white;
-  border-radius: 10px;
-  padding: 25px;
-  box-shadow: 0 2px 10px rgba(0,0,0,.08);
-  margin-bottom: 20px;
+.numero strong{display:block;font-size:27px}
+
+#lista{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+gap:15px
 }
 
-/* LOGIN */
-
-#login {
-  max-width: 450px;
-  margin: 70px auto;
+.candidato{
+background:white;
+border-radius:9px;
+padding:20px;
+border-left:5px solid #111;
+box-shadow:0 2px 8px rgba(0,0,0,.06);
+cursor:pointer;
+transition:.15s
 }
 
-input, textarea {
-  width: 100%;
-  padding: 12px;
-  margin: 6px 0 15px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 15px;
-  font-family: Arial, Helvetica, sans-serif;
+.candidato:hover{
+transform:translateY(-2px);
+box-shadow:0 4px 13px rgba(0,0,0,.12)
 }
 
-textarea {
-  min-height: 120px;
-  resize: vertical;
+.candidato h3{margin:0 0 8px}
+.candidato p{margin:5px 0;color:#555}
+.tags{margin-top:12px}
+
+.tag{
+display:inline-block;
+background:#eee;
+border-radius:20px;
+padding:5px 9px;
+margin:3px 3px 0 0;
+font-size:12px
 }
 
-button {
-  border: 0;
-  border-radius: 6px;
-  background: #111;
-  color: white;
-  padding: 11px 18px;
-  cursor: pointer;
-  font-size: 14px;
+.status{
+display:inline-block;
+margin-top:14px;
+padding:6px 10px;
+border-radius:5px;
+font-size:12px;
+font-weight:bold
 }
 
-button:hover {
-  background: #333;
+.status-novo{background:#e5e7eb}
+.status-triagem{background:#dbeafe}
+.status-entrevistar{background:#fef3c7}
+.status-teste{background:#ede9fe}
+.status-aprovado{background:#dcfce7}
+.status-contratado{background:#bbf7d0}
+.status-banco{background:#e0f2fe}
+.status-descartado{background:#fee2e2}
+
+#modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.65);
+padding:30px;
+overflow-y:auto;
+z-index:999
 }
 
-button:disabled {
-  opacity: .6;
-  cursor: wait;
+.modal-box{
+background:white;
+max-width:900px;
+margin:20px auto;
+border-radius:10px;
+padding:30px
 }
 
-#erro {
-  color: #b00020;
-  margin-top: 15px;
+.modal-box h2{margin-top:0}
+.linha{padding:9px 0;border-bottom:1px solid #eee}
+.fechar{float:right;background:#777}
+.sair{background:#777}
+
+.bloco-rh{
+background:#f5f5f5;
+border-radius:10px;
+padding:22px;
+margin-top:25px;
+border:1px solid #e5e5e5
 }
 
-#painel {
-  display: none;
+.bloco-rh h3{margin:0 0 5px}
+
+.subtitulo-rh{
+color:#666;
+font-size:14px;
+margin:0 0 20px
 }
 
-/* CONTROLES */
-
-.barra {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr auto;
-  gap: 12px;
-  align-items: center;
+.grid-rh{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px
 }
 
-.barra input,
-.barra select {
-  margin: 0;
-  height: 44px;
+.campo-rh label{
+display:block;
+font-weight:bold;
+margin-bottom:5px
 }
 
-select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: white;
-  font-size: 15px;
+.checks{
+display:grid;
+gap:10px;
+margin:20px 0
 }
 
-.resumo {
-  display: flex;
-  gap: 15px;
-  margin: 20px 0;
-  flex-wrap: wrap;
+.check-item{
+display:flex;
+align-items:center;
+gap:10px;
+background:white;
+border-radius:6px;
+padding:12px;
+border:1px solid #e5e5e5
 }
 
-.numero {
-  background: white;
-  border-radius: 8px;
-  padding: 15px 20px;
-  min-width: 170px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.06);
-}
+.check-item input{width:auto;margin:0}
+.salvar{background:#15803d;margin-top:5px}
+.salvar:hover{background:#166534}
+#mensagemSalvar{margin-left:12px;font-weight:bold}
 
-.numero strong {
-  display: block;
-  font-size: 27px;
-}
-
-/* CANDIDATOS */
-
-#lista {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px,1fr));
-  gap: 15px;
-}
-
-.candidato {
-  background: white;
-  border-radius: 9px;
-  padding: 20px;
-  border-left: 5px solid #111;
-  box-shadow: 0 2px 8px rgba(0,0,0,.06);
-  cursor: pointer;
-  transition: .15s;
-}
-
-.candidato:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 13px rgba(0,0,0,.12);
-}
-
-.candidato h3 {
-  margin: 0 0 8px;
-}
-
-.candidato p {
-  margin: 5px 0;
-  color: #555;
-}
-
-.tags {
-  margin-top: 12px;
-}
-
-.tag {
-  display: inline-block;
-  background: #eee;
-  border-radius: 20px;
-  padding: 5px 9px;
-  margin: 3px 3px 0 0;
-  font-size: 12px;
-}
-
-.status {
-  display: inline-block;
-  margin-top: 14px;
-  padding: 6px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.status-novo {
-  background:#e5e7eb;
-}
-
-.status-triagem {
-  background:#dbeafe;
-}
-
-.status-entrevistar {
-  background:#fef3c7;
-}
-
-.status-teste {
-  background:#ede9fe;
-}
-
-.status-aprovado {
-  background:#dcfce7;
-}
-
-.status-contratado {
-  background:#bbf7d0;
-}
-
-.status-banco {
-  background:#e0f2fe;
-}
-
-.status-descartado {
-  background:#fee2e2;
-}
-
-/* MODAL */
-
-#modal {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.65);
-  padding: 30px;
-  overflow-y: auto;
-  z-index: 999;
-}
-
-.modal-box {
-  background: white;
-  max-width: 900px;
-  margin: 20px auto;
-  border-radius: 10px;
-  padding: 30px;
-}
-
-.modal-box h2 {
-  margin-top: 0;
-}
-
-.linha {
-  padding: 9px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.fechar {
-  float: right;
-  background: #777;
-}
-
-.sair {
-  background: #777;
-}
-
-/* RH */
-
-.bloco-rh {
-  background: #f5f5f5;
-  border-radius: 10px;
-  padding: 22px;
-  margin-top: 25px;
-  border: 1px solid #e5e5e5;
-}
-
-.bloco-rh h3 {
-  margin-top: 0;
-  margin-bottom: 5px;
-}
-
-.subtitulo-rh {
-  color: #666;
-  font-size: 14px;
-  margin-top: 0;
-  margin-bottom: 20px;
-}
-
-.grid-rh {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
-
-.campo-rh label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.checks {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  margin: 20px 0;
-}
-
-.check-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: white;
-  border-radius: 6px;
-  padding: 12px;
-  border: 1px solid #e5e5e5;
-}
-
-.check-item input {
-  width: auto;
-  margin: 0;
-}
-
-.salvar {
-  background: #15803d;
-  margin-top: 5px;
-}
-
-.salvar:hover {
-  background: #166534;
-}
-
-#mensagemSalvar {
-  margin-left: 12px;
-  font-weight: bold;
-}
-
-/* MOBILE */
-
-@media(max-width:700px) {
-
-  .barra {
-    grid-template-columns: 1fr;
-  }
-
-  .resumo {
-    display: block;
-  }
-
-  .numero {
-    margin-bottom: 10px;
-  }
-
-  .grid-rh {
-    grid-template-columns: 1fr;
-  }
-
-  #modal {
-    padding: 10px;
-  }
-
-  .modal-box {
-    padding: 20px;
-  }
+@media(max-width:700px){
+.barra,.grid-rh{grid-template-columns:1fr}
+.resumo{display:block}
+.numero{margin-bottom:10px}
+#modal{padding:10px}
+.modal-box{padding:20px}
 }
 </style>
 </head>
@@ -370,332 +211,218 @@ select {
 <body>
 
 <div class="topo">
-  <h1>ADESUL | Seleção de Pessoas</h1>
-  <p>Painel interno de candidatos</p>
+<h1>ADESUL | Seleção de Pessoas</h1>
+<p>Painel interno de candidatos</p>
 </div>
-
-
-<!-- LOGIN -->
 
 <div id="login" class="card">
 
-  <h2>Acesso interno</h2>
+<h2>Acesso interno</h2>
 
-  <label>E-mail</label>
+<label>E-mail</label>
+<input id="email" type="email" placeholder="seuemail@adesul.com">
 
-  <input
-    id="email"
-    type="email"
-    placeholder="seuemail@adesul.com"
-  >
+<label>Senha</label>
+<input id="senha" type="password" placeholder="Senha">
 
-  <label>Senha</label>
+<button onclick="entrar()">ENTRAR</button>
 
-  <input
-    id="senha"
-    type="password"
-    placeholder="Senha"
-  >
-
-  <button onclick="entrar()">
-    ENTRAR
-  </button>
-
-  <div id="erro"></div>
+<div id="erro"></div>
 
 </div>
-
-
-<!-- PAINEL -->
 
 <div id="painel" class="container">
 
-  <div class="card">
+<div class="card">
 
-    <button
-      class="sair"
-      onclick="sair()"
-      style="float:right"
-    >
-      SAIR
-    </button>
+<button class="sair" onclick="sair()" style="float:right">
+SAIR
+</button>
 
-    <h2>Banco de candidatos</h2>
+<h2>Banco de candidatos</h2>
 
-    <div class="barra">
+<div class="barra">
 
-      <input
-        id="busca"
-        type="text"
-        placeholder="Buscar por nome, bairro, cidade..."
-        oninput="filtrar()"
-      >
+<input
+id="busca"
+type="text"
+placeholder="Buscar por nome, bairro, cidade..."
+oninput="filtrar()"
+>
 
-      <select
-        id="filtroArea"
-        onchange="filtrar()"
-      >
+<select id="filtroArea" onchange="filtrar()">
+<option value="">Todas as experiências</option>
+<option>Marcenaria</option>
+<option>Serralheria</option>
+<option>Pintura</option>
+<option>Montagem</option>
+<option>Acabamento gráfico</option>
+<option>Adesivagem</option>
+<option>Funilaria</option>
+<option>Tapeçaria</option>
+<option>Elétrica</option>
+<option>Obras</option>
+</select>
 
-        <option value="">
-          Todas as experiências
-        </option>
+<select id="filtroStatus" onchange="filtrar()">
+<option value="">Todos os status</option>
+<option value="novo">Novo</option>
+<option value="triagem">Triagem</option>
+<option value="entrevistar">Entrevistar</option>
+<option value="teste_pratico">Teste prático</option>
+<option value="aprovado">Aprovado</option>
+<option value="contratado">Contratado</option>
+<option value="banco_talentos">Banco de talentos</option>
+<option value="descartado">Descartado</option>
+</select>
 
-        <option>Marcenaria</option>
-        <option>Serralheria</option>
-        <option>Pintura</option>
-        <option>Montagem</option>
-        <option>Acabamento gráfico</option>
-        <option>Adesivagem</option>
-        <option>Funilaria</option>
-        <option>Tapeçaria</option>
-        <option>Elétrica</option>
-        <option>Obras</option>
+<button onclick="carregarCandidatos()">
+ATUALIZAR
+</button>
 
-      </select>
+</div>
+</div>
 
-      <select
-        id="filtroStatus"
-        onchange="filtrar()"
-      >
+<div class="resumo">
 
-        <option value="">
-          Todos os status
-        </option>
+<div class="numero">
+<strong id="total">0</strong>
+candidatos
+</div>
 
-        <option value="novo">Novo</option>
-        <option value="triagem">Triagem</option>
-        <option value="entrevistar">Entrevistar</option>
-        <option value="teste_pratico">Teste prático</option>
-        <option value="aprovado">Aprovado</option>
-        <option value="contratado">Contratado</option>
-        <option value="banco_talentos">Banco de talentos</option>
-        <option value="descartado">Descartado</option>
-
-      </select>
-
-      <button onclick="carregarCandidatos()">
-        ATUALIZAR
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <div class="resumo">
-
-    <div class="numero">
-      <strong id="total">0</strong>
-      candidatos
-    </div>
-
-    <div class="numero">
-      <strong id="exibidos">0</strong>
-      exibidos
-    </div>
-
-  </div>
-
-
-  <div id="lista"></div>
+<div class="numero">
+<strong id="exibidos">0</strong>
+exibidos
+</div>
 
 </div>
 
+<div id="lista"></div>
 
-<!-- FICHA COMPLETA -->
+</div>
 
 <div id="modal">
 
-  <div class="modal-box">
+<div class="modal-box">
 
-    <button
-      class="fechar"
-      onclick="fecharFicha()"
-    >
-      FECHAR
-    </button>
+<button class="fechar" onclick="fecharFicha()">
+FECHAR
+</button>
 
-    <h2 id="fichaNome">
-      Candidato
-    </h2>
+<h2 id="fichaNome">Candidato</h2>
 
-    <div id="ficha"></div>
+<div id="ficha"></div>
 
+<div class="bloco-rh">
 
-    <!-- AVALIAÇÃO INTERNA -->
+<h3>Avaliação interna Adesul</h3>
 
-    <div class="bloco-rh">
+<p class="subtitulo-rh">
+Informações internas da seleção. Não fazem parte do cadastro preenchido pelo candidato.
+</p>
 
-      <h3>Avaliação interna Adesul</h3>
+<div class="grid-rh">
 
-      <p class="subtitulo-rh">
-        Informações internas da seleção. Não fazem parte do cadastro preenchido pelo candidato.
-      </p>
+<div class="campo-rh">
 
+<label>Status do candidato</label>
 
-      <div class="grid-rh">
-
-        <div class="campo-rh">
-
-          <label>Status do candidato</label>
-
-          <select id="rhStatus">
-
-            <option value="novo">
-              Novo
-            </option>
-
-            <option value="triagem">
-              Triagem
-            </option>
-
-            <option value="entrevistar">
-              Entrevistar
-            </option>
-
-            <option value="teste_pratico">
-              Teste prático
-            </option>
-
-            <option value="aprovado">
-              Aprovado
-            </option>
-
-            <option value="contratado">
-              Contratado
-            </option>
-
-            <option value="banco_talentos">
-              Banco de talentos
-            </option>
-
-            <option value="descartado">
-              Descartado
-            </option>
-
-          </select>
-
-        </div>
-
-
-        <div class="campo-rh">
-
-          <label>Classificação</label>
-
-          <select id="rhClassificacao">
-
-            <option value="">
-              Não classificado
-            </option>
-
-            <option value="A">
-              A - Forte candidato
-            </option>
-
-            <option value="B">
-              B - Bom candidato
-            </option>
-
-            <option value="C">
-              C - Avaliar
-            </option>
-
-            <option value="D">
-              D - Baixa aderência
-            </option>
-
-          </select>
-
-        </div>
-
-      </div>
-
-
-      <div class="checks">
-
-        <label class="check-item">
-
-          <input
-            type="checkbox"
-            id="rhAlertaProfissional"
-          >
-
-          <span>
-            <strong>Alerta profissional / técnico</strong><br>
-            <small>
-              Algum ponto da experiência ou capacidade técnica merece atenção.
-            </small>
-          </span>
-
-        </label>
-
-
-        <label class="check-item">
-
-          <input
-            type="checkbox"
-            id="rhAlertaComportamental"
-          >
-
-          <span>
-            <strong>Alerta comportamental</strong><br>
-            <small>
-              Algum ponto observado na entrevista merece atenção.
-            </small>
-          </span>
-
-        </label>
-
-
-        <label class="check-item">
-
-          <input
-            type="checkbox"
-            id="rhAlertaRestricao"
-          >
-
-          <span>
-            <strong>Restrição operacional / disponibilidade</strong><br>
-            <small>
-              Horários, viagens, finais de semana ou outra limitação operacional.
-            </small>
-          </span>
-
-        </label>
-
-      </div>
-
-
-      <div class="campo-rh">
-
-        <label>
-          Observações internas
-        </label>
-
-        <textarea
-          id="rhObservacoes"
-          placeholder="Anotações da entrevista, pontos fortes, dúvidas, pretensão salarial, disponibilidade, resultado do teste prático..."
-        ></textarea>
-
-      </div>
-
-
-      <button
-        id="botaoSalvar"
-        class="salvar"
-        onclick="salvarAvaliacao()"
-      >
-        SALVAR AVALIAÇÃO
-      </button>
-
-      <span id="mensagemSalvar"></span>
-
-    </div>
-
-  </div>
+<select id="rhStatus">
+<option value="novo">Novo</option>
+<option value="triagem">Triagem</option>
+<option value="entrevistar">Entrevistar</option>
+<option value="teste_pratico">Teste prático</option>
+<option value="aprovado">Aprovado</option>
+<option value="contratado">Contratado</option>
+<option value="banco_talentos">Banco de talentos</option>
+<option value="descartado">Descartado</option>
+</select>
 
 </div>
 
+<div class="campo-rh">
+
+<label>Classificação</label>
+
+<select id="rhClassificacao">
+<option value="">Não classificado</option>
+<option value="A">A - Forte candidato</option>
+<option value="B">B - Bom candidato</option>
+<option value="C">C - Avaliar</option>
+<option value="D">D - Baixa aderência</option>
+</select>
+
+</div>
+
+</div>
+
+<div class="checks">
+
+<label class="check-item">
+
+<input type="checkbox" id="rhAlertaProfissional">
+
+<span>
+<strong>Alerta profissional / técnico</strong><br>
+<small>
+Algum ponto da experiência ou capacidade técnica merece atenção.
+</small>
+</span>
+
+</label>
+
+<label class="check-item">
+
+<input type="checkbox" id="rhAlertaComportamental">
+
+<span>
+<strong>Alerta comportamental</strong><br>
+<small>
+Algum ponto observado na entrevista merece atenção.
+</small>
+</span>
+
+</label>
+
+<label class="check-item">
+
+<input type="checkbox" id="rhAlertaRestricao">
+
+<span>
+<strong>Restrição operacional / disponibilidade</strong><br>
+<small>
+Horários, viagens, finais de semana ou outra limitação operacional.
+</small>
+</span>
+
+</label>
+
+</div>
+
+<div class="campo-rh">
+
+<label>Observações internas</label>
+
+<textarea
+id="rhObservacoes"
+placeholder="Anotações da entrevista, pontos fortes, dúvidas, pretensão salarial, disponibilidade, resultado do teste prático..."
+></textarea>
+
+</div>
+
+<button
+id="botaoSalvar"
+class="salvar"
+onclick="salvarAvaliacao()"
+>
+SALVAR AVALIAÇÃO
+</button>
+
+<span id="mensagemSalvar"></span>
+
+</div>
+</div>
+</div>
 
 <script>
 
@@ -707,8 +434,8 @@ const SUPABASE_KEY =
 
 const supabaseClient =
 supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+SUPABASE_URL,
+SUPABASE_KEY
 );
 
 let candidatos = [];
@@ -716,869 +443,568 @@ let candidatos = [];
 let candidatoAberto = null;
 
 
-/* LOGIN */
-
 async function entrar() {
 
-  const email =
-    document
-      .getElementById("email")
-      .value
-      .trim();
+const email =
+document.getElementById("email").value.trim();
 
-  const senha =
-    document
-      .getElementById("senha")
-      .value;
+const senha =
+document.getElementById("senha").value;
 
-  const erro =
-    document
-      .getElementById("erro");
+const erro =
+document.getElementById("erro");
 
-  erro.innerText =
-    "Entrando...";
+erro.innerText =
+"Entrando...";
 
+const { error } =
+await supabaseClient.auth.signInWithPassword({
+email: email,
+password: senha
+});
 
-  const { error } =
-    await supabaseClient
-      .auth
-      .signInWithPassword({
+if(error) {
 
-        email: email,
+console.error(error);
 
-        password: senha
+erro.innerText =
+"Não foi possível entrar. Verifique o e-mail e a senha.";
 
-      });
-
-
-  if(error) {
-
-    console.error(error);
-
-    erro.innerText =
-      "Não foi possível entrar. Verifique o e-mail e a senha.";
-
-    return;
-
-  }
-
-
-  erro.innerText = "";
-
-  abrirPainel();
+return;
 
 }
 
+erro.innerText = "";
 
-/* ABRIR PAINEL */
+abrirPainel();
+
+}
+
 
 async function abrirPainel() {
 
-  document
-    .getElementById("login")
-    .style.display =
-      "none";
+document.getElementById("login").style.display =
+"none";
 
+document.getElementById("painel").style.display =
+"block";
 
-  document
-    .getElementById("painel")
-    .style.display =
-      "block";
-
-
-  await carregarCandidatos();
+await carregarCandidatos();
 
 }
 
-
-/* CARREGAR CANDIDATOS */
 
 async function carregarCandidatos() {
 
-  const { data, error } =
-    await supabaseClient
+const { data, error } =
+await supabaseClient
+.from("candidatos")
+.select("*")
+.order("criado_em", {
+ascending:false
+});
 
-      .from("candidatos")
+if(error) {
 
-      .select("*")
+console.error(error);
 
-      .order(
-        "criado_em",
-        { ascending:false }
-      );
+alert(
+"Não foi possível carregar os candidatos."
+);
 
-
-  if(error) {
-
-    console.error(error);
-
-    alert(
-      "Não foi possível carregar os candidatos."
-    );
-
-    return;
-
-  }
-
-
-  candidatos =
-    data || [];
-
-
-  document
-    .getElementById("total")
-    .innerText =
-      candidatos.length;
-
-
-  filtrar();
+return;
 
 }
 
+candidatos =
+data || [];
 
-/* FILTRAR */
+document.getElementById("total").innerText =
+candidatos.length;
+
+filtrar();
+
+}
+
 
 function filtrar() {
 
-  const busca =
-    document
-      .getElementById("busca")
-      .value
-      .toLowerCase();
+const busca =
+document.getElementById("busca")
+.value
+.toLowerCase();
 
+const area =
+document.getElementById("filtroArea")
+.value
+.toLowerCase();
 
-  const area =
-    document
-      .getElementById("filtroArea")
-      .value
-      .toLowerCase();
+const status =
+document.getElementById("filtroStatus")
+.value;
 
+const filtrados =
+candidatos.filter(c => {
 
-  const status =
-    document
-      .getElementById("filtroStatus")
-      .value;
+const texto =
+JSON.stringify(c).toLowerCase();
 
+const experiencias =
+Array.isArray(c.areas_experiencia)
+? c.areas_experiencia.join(" ")
+: (c.areas_experiencia || "");
 
-  const filtrados =
-    candidatos.filter(c => {
+const statusCandidato =
+c.status || "novo";
 
+const bateBusca =
+!busca ||
+texto.includes(busca);
 
-      const texto =
-        JSON.stringify(c)
-          .toLowerCase();
+const bateArea =
+!area ||
+experiencias
+.toLowerCase()
+.includes(area);
 
+const bateStatus =
+!status ||
+statusCandidato === status;
 
-      const bateBusca =
-        !busca ||
-        texto.includes(busca);
+return (
+bateBusca &&
+bateArea &&
+bateStatus
+);
 
+});
 
-      const experiencias =
-        Array.isArray(c.areas_experiencia)
+document.getElementById("exibidos").innerText =
+filtrados.length;
 
-          ? c.areas_experiencia.join(" ")
-
-          : (c.areas_experiencia || "");
-
-
-      const bateArea =
-        !area ||
-
-        experiencias
-          .toLowerCase()
-          .includes(area);
-
-
-      const statusCandidato =
-        c.status || "novo";
-
-
-      const bateStatus =
-        !status ||
-        statusCandidato === status;
-
-
-      return (
-        bateBusca &&
-        bateArea &&
-        bateStatus
-      );
-
-    });
-
-
-  document
-    .getElementById("exibidos")
-    .innerText =
-      filtrados.length;
-
-
-  desenhar(filtrados);
+desenhar(filtrados);
 
 }
 
-
-/* NOMES DOS STATUS */
 
 function nomeStatus(status) {
 
-  const nomes = {
+const nomes = {
 
-    novo:
-      "Novo",
+novo:"Novo",
 
-    triagem:
-      "Triagem",
+triagem:"Triagem",
 
-    entrevistar:
-      "Entrevistar",
+entrevistar:"Entrevistar",
 
-    teste_pratico:
-      "Teste prático",
+teste_pratico:"Teste prático",
 
-    aprovado:
-      "Aprovado",
+aprovado:"Aprovado",
 
-    contratado:
-      "Contratado",
+contratado:"Contratado",
 
-    banco_talentos:
-      "Banco de talentos",
+banco_talentos:"Banco de talentos",
 
-    descartado:
-      "Descartado"
+descartado:"Descartado"
 
-  };
+};
 
-
-  return nomes[status] || "Novo";
+return nomes[status] || "Novo";
 
 }
 
-
-/* COR DO STATUS */
 
 function classeStatus(status) {
 
-  const classes = {
+const classes = {
 
-    novo:
-      "status-novo",
+novo:"status-novo",
 
-    triagem:
-      "status-triagem",
+triagem:"status-triagem",
 
-    entrevistar:
-      "status-entrevistar",
+entrevistar:"status-entrevistar",
 
-    teste_pratico:
-      "status-teste",
+teste_pratico:"status-teste",
 
-    aprovado:
-      "status-aprovado",
+aprovado:"status-aprovado",
 
-    contratado:
-      "status-contratado",
+contratado:"status-contratado",
 
-    banco_talentos:
-      "status-banco",
+banco_talentos:"status-banco",
 
-    descartado:
-      "status-descartado"
+descartado:"status-descartado"
 
-  };
+};
 
-
-  return (
-    classes[status] ||
-    "status-novo"
-  );
+return classes[status] || "status-novo";
 
 }
 
-
-/* DESENHAR CARDS */
 
 function desenhar(lista) {
 
-  const div =
-    document
-      .getElementById("lista");
+const div =
+document.getElementById("lista");
 
+div.innerHTML = "";
 
-  div.innerHTML = "";
+if(lista.length === 0) {
 
+div.innerHTML =
+"<div class='card'>Nenhum candidato encontrado.</div>";
 
-  if(lista.length === 0) {
-
-    div.innerHTML =
-      "<div class='card'>Nenhum candidato encontrado.</div>";
-
-    return;
-
-  }
-
-
-  lista.forEach(c => {
-
-
-    const card =
-      document
-        .createElement("div");
-
-
-    card.className =
-      "candidato";
-
-
-    const experiencias =
-      Array.isArray(c.areas_experiencia)
-
-        ? c.areas_experiencia
-
-        : [];
-
-
-    let tags = "";
-
-
-    experiencias.forEach(a => {
-
-      tags +=
-        `<span class="tag">${esc(a)}</span>`;
-
-    });
-
-
-    const statusAtual =
-      c.status || "novo";
-
-
-    const classificacao =
-      c.classificacao
-
-        ? ` · Classe ${esc(c.classificacao)}`
-
-        : "";
-
-
-    card.innerHTML = `
-
-      <h3>
-        ${esc(
-          c.nome_completo ||
-          "Sem nome"
-        )}
-      </h3>
-
-
-      <p>
-
-        <strong>Idade:</strong>
-
-        ${esc(
-          c.idade ?? "-"
-        )}
-
-      </p>
-
-
-      <p>
-
-        <strong>Local:</strong>
-
-        ${esc(
-          c.bairro || "-"
-        )}
-
-        ${
-          c.cidade
-            ? " - " + esc(c.cidade)
-            : ""
-        }
-
-      </p>
-
-
-      <p>
-
-        <strong>Experiência:</strong>
-
-        ${esc(
-          c.tempo_experiencia ||
-          "-"
-        )}
-
-      </p>
-
-
-      <div class="tags">
-
-        ${tags}
-
-      </div>
-
-
-      <span
-        class="status ${classeStatus(statusAtual)}"
-      >
-
-        ${esc(nomeStatus(statusAtual))}
-        ${classificacao}
-
-      </span>
-
-    `;
-
-
-    card.onclick =
-      () => abrirFicha(c);
-
-
-    div.appendChild(card);
-
-  });
+return;
 
 }
 
+lista.forEach(c => {
 
-/* ABRIR FICHA */
+const card =
+document.createElement("div");
+
+card.className =
+"candidato";
+
+const experiencias =
+Array.isArray(c.areas_experiencia)
+? c.areas_experiencia
+: [];
+
+let tags = "";
+
+experiencias.forEach(a => {
+
+tags +=
+`<span class="tag">${esc(a)}</span>`;
+
+});
+
+const statusAtual =
+c.status || "novo";
+
+const classificacao =
+c.classificacao
+? ` · Classe ${esc(c.classificacao)}`
+: "";
+
+card.innerHTML = `
+
+<h3>
+${esc(c.nome_completo || "Sem nome")}
+</h3>
+
+<p>
+<strong>Idade:</strong>
+${esc(c.idade ?? "-")}
+</p>
+
+<p>
+<strong>Local:</strong>
+${esc(c.bairro || "-")}
+${c.cidade ? " - " + esc(c.cidade) : ""}
+</p>
+
+<p>
+<strong>Experiência:</strong>
+${esc(c.tempo_experiencia || "-")}
+</p>
+
+<div class="tags">
+${tags}
+</div>
+
+<span class="status ${classeStatus(statusAtual)}">
+${esc(nomeStatus(statusAtual))}
+${classificacao}
+</span>
+
+`;
+
+card.onclick =
+() => abrirFicha(c);
+
+div.appendChild(card);
+
+});
+
+}
+
 
 function abrirFicha(c) {
 
-  candidatoAberto = c;
+candidatoAberto = c;
 
+document.getElementById("fichaNome").innerText =
+c.nome_completo || "Candidato";
 
-  document
-    .getElementById("fichaNome")
-    .innerText =
-      c.nome_completo ||
-      "Candidato";
+const ficha =
+document.getElementById("ficha");
 
+ficha.innerHTML = "";
 
-  const ficha =
-    document
-      .getElementById("ficha");
+const nomes = {
 
+idade:"Idade",
 
-  ficha.innerHTML = "";
+bairro:"Bairro",
 
+cidade:"Cidade",
 
-  const nomes = {
+telefone:"WhatsApp / Telefone",
 
-    idade:
-      "Idade",
+tempo_experiencia:
+"Tempo de experiência",
 
-    bairro:
-      "Bairro",
+areas_experiencia:
+"Conhecimentos / Experiências",
 
-    cidade:
-      "Cidade",
+interesses:
+"Áreas de interesse",
 
-    telefone:
-      "WhatsApp / Telefone",
+hora_extra:
+"Disponibilidade para hora extra",
 
-    tempo_experiencia:
-      "Tempo de experiência",
+viagem:
+"Disponibilidade para viagens",
 
-    areas_experiencia:
-      "Conhecimentos / Experiências",
+observacoes:
+"Observações do candidato",
 
-    interesses:
-      "Áreas de interesse",
+criado_em:
+"Cadastro realizado em"
 
-    hora_extra:
-      "Disponibilidade para hora extra",
+};
 
-    viagem:
-      "Disponibilidade para viagens",
+const camposInternos = [
 
-    observacoes:
-      "Observações do candidato",
+"status",
 
-    criado_em:
-      "Cadastro realizado em"
+"classificacao",
 
-  };
+"alerta_profissional_aci",
 
+"alerta_comportamenta",
 
-  const camposInternos = [
+"alerta_restricao_opera",
 
-    "status",
+"observacoes_sistema"
 
-    "classificacao",
+];
 
-    "alerta_profissional_aci",
+Object.keys(c).forEach(campo => {
 
-    "alerta_comportamenta",
+if(
+campo === "id" ||
+campo === "nome_completo" ||
+camposInternos.includes(campo)
+) return;
 
-    "alerta_restricao_opera",
+let valor =
+c[campo];
 
-    "observacoes_sistema"
+if(
+valor === null ||
+valor === undefined ||
+valor === ""
+) return;
 
-  ];
+if(Array.isArray(valor)) {
 
-
-  Object
-    .keys(c)
-    .forEach(campo => {
-
-
-      if(
-
-        campo === "id" ||
-
-        campo === "nome_completo" ||
-
-        camposInternos.includes(campo)
-
-      ) return;
-
-
-      let valor =
-        c[campo];
-
-
-      if(
-
-        valor === null ||
-
-        valor === undefined ||
-
-        valor === ""
-
-      ) return;
-
-
-      if(Array.isArray(valor)) {
-
-        valor =
-          valor.join(", ");
-
-      }
-
-
-      if(typeof valor === "boolean") {
-
-        valor =
-          valor
-            ? "Sim"
-            : "Não";
-
-      }
-
-
-      const linha =
-        document
-          .createElement("div");
-
-
-      linha.className =
-        "linha";
-
-
-      linha.innerHTML =
-
-        `<strong>
-          ${esc(
-            nomes[campo] ||
-            campo
-          )}:
-        </strong>
-
-        ${esc(valor)}`;
-
-
-      ficha.appendChild(linha);
-
-    });
-
-
-  /* DADOS INTERNOS */
-
-
-  document
-    .getElementById("rhStatus")
-    .value =
-      c.status || "novo";
-
-
-  document
-    .getElementById("rhClassificacao")
-    .value =
-      c.classificacao || "";
-
-
-  document
-    .getElementById("rhAlertaProfissional")
-    .checked =
-      !!c.alerta_profissional_aci;
-
-
-  document
-    .getElementById("rhAlertaComportamental")
-    .checked =
-      !!c.alerta_comportamenta;
-
-
-  document
-    .getElementById("rhAlertaRestricao")
-    .checked =
-      !!c.alerta_restricao_opera;
-
-
-  document
-    .getElementById("rhObservacoes")
-    .value =
-      c.observacoes_sistema || "";
-
-
-  const mensagem =
-    document
-      .getElementById("mensagemSalvar");
-
-
-  mensagem.innerText = "";
-
-
-  document
-    .getElementById("modal")
-    .style.display =
-      "block";
+valor =
+valor.join(", ");
 
 }
 
+if(typeof valor === "boolean") {
 
-/* SALVAR AVALIAÇÃO */
+valor =
+valor ? "Sim" : "Não";
+
+}
+
+const linha =
+document.createElement("div");
+
+linha.className =
+"linha";
+
+linha.innerHTML =
+`<strong>${esc(nomes[campo] || campo)}:</strong> ${esc(valor)}`;
+
+ficha.appendChild(linha);
+
+});
+
+
+document.getElementById("rhStatus").value =
+c.status || "novo";
+
+document.getElementById("rhClassificacao").value =
+c.classificacao || "";
+
+document.getElementById("rhAlertaProfissional").checked =
+!!c.alerta_profissional_aci;
+
+document.getElementById("rhAlertaComportamental").checked =
+!!c.alerta_comportamenta;
+
+document.getElementById("rhAlertaRestricao").checked =
+!!c.alerta_restricao_opera;
+
+document.getElementById("rhObservacoes").value =
+c.observacoes_sistema || "";
+
+document.getElementById("mensagemSalvar").innerText =
+"";
+
+document.getElementById("modal").style.display =
+"block";
+
+}
+
 
 async function salvarAvaliacao() {
 
-  if(!candidatoAberto) {
+if(!candidatoAberto) return;
 
-    return;
+const botao =
+document.getElementById("botaoSalvar");
 
-  }
+const mensagem =
+document.getElementById("mensagemSalvar");
 
+botao.disabled =
+true;
 
-  const botao =
-    document
-      .getElementById("botaoSalvar");
+botao.innerText =
+"SALVANDO...";
 
+mensagem.innerText =
+"";
 
-  const mensagem =
-    document
-      .getElementById("mensagemSalvar");
+const alteracoes = {
 
+status:
+document.getElementById("rhStatus").value,
 
-  botao.disabled = true;
+classificacao:
+document.getElementById("rhClassificacao").value || null,
 
-  botao.innerText =
-    "SALVANDO...";
+alerta_profissional_aci:
+document.getElementById("rhAlertaProfissional").checked,
 
+alerta_comportamenta:
+document.getElementById("rhAlertaComportamental").checked,
 
-  mensagem.innerText = "";
+alerta_restricao_opera:
+document.getElementById("rhAlertaRestricao").checked,
 
+observacoes_sistema:
+document.getElementById("rhObservacoes").value.trim() || null
 
-  const alteracoes = {
+};
 
+const { data, error } =
+await supabaseClient
+.from("candidatos")
+.update(alteracoes)
+.eq("id", candidatoAberto.id)
+.select()
+.single();
 
-    status:
+botao.disabled =
+false;
 
-      document
-        .getElementById("rhStatus")
-        .value,
+botao.innerText =
+"SALVAR AVALIAÇÃO";
 
+if(error) {
 
-    classificacao:
+console.error(error);
 
-      document
-        .getElementById("rhClassificacao")
-        .value || null,
+mensagem.style.color =
+"#b00020";
 
+mensagem.innerText =
+"Erro ao salvar: " + error.message;
 
-    alerta_profissional_aci:
-
-      document
-        .getElementById("rhAlertaProfissional")
-        .checked,
-
-
-    alerta_comportamenta:
-
-      document
-        .getElementById("rhAlertaComportamental")
-        .checked,
-
-
-    alerta_restricao_opera:
-
-      document
-        .getElementById("rhAlertaRestricao")
-        .checked,
-
-
-    observacoes_sistema:
-
-      document
-        .getElementById("rhObservacoes")
-        .value
-        .trim() || null
-
-  };
-
-
-  const { data, error } =
-    await supabaseClient
-
-      .from("candidatos")
-
-      .update(alteracoes)
-
-      .eq(
-        "id",
-        candidatoAberto.id
-      )
-
-      .select()
-
-      .single();
-
-
-  botao.disabled = false;
-
-  botao.innerText =
-    "SALVAR AVALIAÇÃO";
-
-
-  if(error) {
-
-    console.error(error);
-
-    mensagem.style.color =
-      "#b00020";
-
-    mensagem.innerText =
-      "Erro ao salvar: " +
-      error.message;
-
-    return;
-
-  }
-
-
-  candidatoAberto =
-    data;
-
-
-  const indice =
-    candidatos.findIndex(
-      c => c.id === data.id
-    );
-
-
-  if(indice !== -1) {
-
-    candidatos[indice] =
-      data;
-
-  }
-
-
-  mensagem.style.color =
-    "#15803d";
-
-
-  mensagem.innerText =
-    "Salvo com sucesso.";
-
-
-  filtrar();
+return;
 
 }
 
+candidatoAberto =
+data;
 
-/* FECHAR FICHA */
+const indice =
+candidatos.findIndex(
+c => c.id === data.id
+);
+
+if(indice !== -1) {
+
+candidatos[indice] =
+data;
+
+}
+
+mensagem.style.color =
+"#15803d";
+
+mensagem.innerText =
+"Salvo com sucesso.";
+
+filtrar();
+
+}
+
 
 function fecharFicha() {
 
-  document
-    .getElementById("modal")
-    .style.display =
-      "none";
+document.getElementById("modal").style.display =
+"none";
 
-
-  candidatoAberto =
-    null;
+candidatoAberto =
+null;
 
 }
 
-
-/* LOGOUT */
 
 async function sair() {
 
-  await supabaseClient
-    .auth
-    .signOut();
+await supabaseClient.auth.signOut();
 
-
-  location.reload();
+location.reload();
 
 }
 
-
-/* SEGURANÇA DE TEXTO */
 
 function esc(valor) {
 
-  return String(
-    valor ?? ""
-  )
+return String(valor ?? "")
 
-    .replaceAll(
-      "&",
-      "&amp;"
-    )
+.replaceAll("&","&amp;")
 
-    .replaceAll(
-      "<",
-      "&lt;"
-    )
+.replaceAll("<","&lt;")
 
-    .replaceAll(
-      ">",
-      "&gt;"
-    )
+.replaceAll(">","&gt;")
 
-    .replaceAll(
-      '"',
-      "&quot;"
-    )
+.replaceAll('"',"&quot;")
 
-    .replaceAll(
-      "'",
-      "&#039;"
-    );
+.replaceAll("'","&#039;");
 
 }
 
 
-/* VERIFICAR SESSÃO */
-
 async function verificarLogin() {
 
-  const { data } =
-    await supabaseClient
-      .auth
-      .getSession();
+const { data } =
+await supabaseClient.auth.getSession();
 
+if(data.session) {
 
-  if(data.session) {
+abrirPainel();
 
-    abrirPainel();
-
-  }
+}
 
 }
 
