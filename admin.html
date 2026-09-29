@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -9,9 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -37,7 +35,7 @@ body {
 }
 
 .container {
-  max-width: 1250px;
+  max-width: 1350px;
   margin: 30px auto;
   padding: 0 20px;
 }
@@ -57,13 +55,19 @@ body {
   margin: 70px auto;
 }
 
-input {
+input, textarea {
   width: 100%;
   padding: 12px;
   margin: 6px 0 15px;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 15px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
 }
 
 button {
@@ -76,24 +80,20 @@ button {
   font-size: 14px;
 }
 
-button:hover {
-  background: #333;
-}
+button:hover { background: #333; }
 
 #erro {
   color: #b00020;
   margin-top: 15px;
 }
 
-#painel {
-  display: none;
-}
+#painel { display: none; }
 
 /* CONTROLES */
 
 .barra {
   display: grid;
-  grid-template-columns: 2fr 1fr auto;
+  grid-template-columns: 2fr 1fr 1fr auto;
   gap: 12px;
   align-items: center;
 }
@@ -105,6 +105,7 @@ button:hover {
 }
 
 select {
+  width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -116,6 +117,7 @@ select {
   display: flex;
   gap: 15px;
   margin: 20px 0;
+  flex-wrap: wrap;
 }
 
 .numero {
@@ -135,7 +137,7 @@ select {
 
 #lista {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(310px,1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px,1fr));
   gap: 15px;
 }
 
@@ -146,6 +148,7 @@ select {
   border-left: 5px solid #111;
   box-shadow: 0 2px 8px rgba(0,0,0,.06);
   cursor: pointer;
+  transition: .15s;
 }
 
 .candidato:hover {
@@ -175,6 +178,25 @@ select {
   font-size: 12px;
 }
 
+.status {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: bold;
+  background: #e5e7eb;
+}
+
+.status-novo { background:#e5e7eb; }
+.status-triagem { background:#dbeafe; }
+.status-entrevistar { background:#fef3c7; }
+.status-teste { background:#ede9fe; }
+.status-aprovado { background:#dcfce7; }
+.status-contratado { background:#bbf7d0; }
+.status-banco { background:#e0f2fe; }
+.status-descartado { background:#fee2e2; }
+
 /* MODAL */
 
 #modal {
@@ -184,19 +206,18 @@ select {
   background: rgba(0,0,0,.65);
   padding: 30px;
   overflow-y: auto;
+  z-index: 999;
 }
 
 .modal-box {
   background: white;
-  max-width: 750px;
+  max-width: 900px;
   margin: 20px auto;
   border-radius: 10px;
   padding: 30px;
 }
 
-.modal-box h2 {
-  margin-top: 0;
-}
+.modal-box h2 { margin-top: 0; }
 
 .linha {
   padding: 9px 0;
@@ -208,8 +229,64 @@ select {
   background: #777;
 }
 
-.sair {
-  background: #777;
+.sair { background: #777; }
+
+.bloco-rh {
+  background: #f5f5f5;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 25px;
+}
+
+.bloco-rh h3 {
+  margin-top: 0;
+}
+
+.grid-rh {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.campo-rh label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.checks {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.check-item input {
+  width: auto;
+  margin: 0;
+}
+
+.salvar {
+  background: #15803d;
+  margin-top: 10px;
+}
+
+.salvar:hover {
+  background: #166534;
+}
+
+#mensagemSalvar {
+  margin-left: 10px;
+  font-weight: bold;
 }
 
 @media(max-width:700px) {
@@ -224,6 +301,18 @@ select {
   .numero {
     margin-bottom: 10px;
   }
+
+  .grid-rh {
+    grid-template-columns: 1fr;
+  }
+
+  #modal {
+    padding: 10px;
+  }
+
+  .modal-box {
+    padding: 20px;
+  }
 }
 </style>
 </head>
@@ -234,7 +323,6 @@ select {
   <h1>ADESUL | Seleção de Pessoas</h1>
   <p>Painel interno de candidatos</p>
 </div>
-
 
 <!-- LOGIN -->
 
@@ -262,7 +350,6 @@ select {
 
 </div>
 
-
 <!-- PAINEL -->
 
 <div id="painel" class="container">
@@ -280,7 +367,7 @@ select {
       <input
         id="busca"
         type="text"
-        placeholder="Buscar por nome, bairro ou cidade..."
+        placeholder="Buscar por nome, bairro, cidade..."
         oninput="filtrar()"
       >
 
@@ -298,6 +385,18 @@ select {
         <option>Obras</option>
       </select>
 
+      <select id="filtroStatus" onchange="filtrar()">
+        <option value="">Todos os status</option>
+        <option value="novo">Novo</option>
+        <option value="triagem">Triagem</option>
+        <option value="entrevistar">Entrevistar</option>
+        <option value="teste_pratico">Teste prático</option>
+        <option value="aprovado">Aprovado</option>
+        <option value="contratado">Contratado</option>
+        <option value="banco_talentos">Banco de talentos</option>
+        <option value="descartado">Descartado</option>
+      </select>
+
       <button onclick="carregarCandidatos()">
         ATUALIZAR
       </button>
@@ -305,7 +404,6 @@ select {
     </div>
 
   </div>
-
 
   <div class="resumo">
 
@@ -321,11 +419,9 @@ select {
 
   </div>
 
-
   <div id="lista"></div>
 
 </div>
-
 
 <!-- FICHA COMPLETA -->
 
@@ -341,10 +437,105 @@ select {
 
     <div id="ficha"></div>
 
+    <div class="bloco-rh">
+
+      <h3>Avaliação interna Adesul</h3>
+
+      <div class="grid-rh">
+
+        <div class="campo-rh">
+          <label>Status do candidato</label>
+          <select id="rhStatus">
+            <option value="novo">Novo</option>
+            <option value="triagem">Triagem</option>
+            <option value="entrevistar">Entrevistar</option>
+            <option value="teste_pratico">Teste prático</option>
+            <option value="aprovado">Aprovado</option>
+            <option value="contratado">Contratado</option>
+            <option value="banco_talentos">Banco de talentos</option>
+            <option value="descartado">Descartado</option>
+          </select>
+        </div>
+
+        <div class="campo-rh">
+          <label>Classificação</label>
+          <select id="rhClassificacao">
+            <option value="">Não classificado</option>
+            <option value="A">A - Forte candidato</option>
+            <option value="B">B - Bom candidato</option>
+            <option value="C">C - Avaliar</option>
+            <option value="D">D - Baixa aderência</option>
+          </select>
+        </div>
+
+        <div class="campo-rh">
+          <label>Nota profissional</label>
+          <select id="rhProfissional">
+            <option value="">Sem avaliação</option>
+            <option value="1">1 - Muito baixa</option>
+            <option value="2">2 - Baixa</option>
+            <option value="3">3 - Regular</option>
+            <option value="4">4 - Boa</option>
+            <option value="5">5 - Muito boa</option>
+          </select>
+        </div>
+
+        <div class="campo-rh">
+          <label>Nota comportamental</label>
+          <select id="rhComportamental">
+            <option value="">Sem avaliação</option>
+            <option value="1">1 - Muito baixa</option>
+            <option value="2">2 - Baixa</option>
+            <option value="3">3 - Regular</option>
+            <option value="4">4 - Boa</option>
+            <option value="5">5 - Muito boa</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="checks">
+
+        <label class="check-item">
+          <input type="checkbox" id="rhAlertaProfissional">
+          Alerta profissional / técnico
+        </label>
+
+        <label class="check-item">
+          <input type="checkbox" id="rhAlertaComportamental">
+          Alerta comportamental
+        </label>
+
+        <label class="check-item">
+          <input type="checkbox" id="rhAlertaRestricao">
+          Restrição operacional / disponibilidade
+        </label>
+
+      </div>
+
+      <div class="campo-rh">
+        <label>Observações internas</label>
+        <textarea
+          id="rhObservacoes"
+          placeholder="Anotações da entrevista, impressões, pontos fortes, dúvidas, disponibilidade, pretensão, teste prático..."
+        ></textarea>
+      </div>
+
+      <button
+        id="botaoSalvar"
+        class="salvar"
+        onclick="salvarAvaliacao()"
+      >
+        SALVAR AVALIAÇÃO
+      </button>
+
+      <span id="mensagemSalvar"></span>
+
+    </div>
+
   </div>
 
 </div>
-
 
 <script>
 
@@ -361,7 +552,7 @@ supabase.createClient(
 );
 
 let candidatos = [];
-
+let candidatoAberto = null;
 
 /* LOGIN */
 
@@ -399,7 +590,6 @@ async function entrar() {
   abrirPainel();
 }
 
-
 /* ABRIR PAINEL */
 
 async function abrirPainel() {
@@ -412,7 +602,6 @@ async function abrirPainel() {
 
   await carregarCandidatos();
 }
-
 
 /* CARREGAR BANCO */
 
@@ -445,7 +634,6 @@ async function carregarCandidatos() {
   filtrar();
 }
 
-
 /* FILTROS */
 
 function filtrar() {
@@ -459,6 +647,10 @@ function filtrar() {
     document.getElementById("filtroArea")
       .value
       .toLowerCase();
+
+  const status =
+    document.getElementById("filtroStatus")
+      .value;
 
   const filtrados =
     candidatos.filter(c => {
@@ -481,7 +673,16 @@ function filtrar() {
           .toLowerCase()
           .includes(area);
 
-      return bateBusca && bateArea;
+      const statusCandidato =
+        c.status || "novo";
+
+      const bateStatus =
+        !status ||
+        statusCandidato === status;
+
+      return bateBusca &&
+             bateArea &&
+             bateStatus;
 
     });
 
@@ -491,6 +692,39 @@ function filtrar() {
   desenhar(filtrados);
 }
 
+/* STATUS */
+
+function nomeStatus(status) {
+
+  const nomes = {
+    novo: "Novo",
+    triagem: "Triagem",
+    entrevistar: "Entrevistar",
+    teste_pratico: "Teste prático",
+    aprovado: "Aprovado",
+    contratado: "Contratado",
+    banco_talentos: "Banco de talentos",
+    descartado: "Descartado"
+  };
+
+  return nomes[status] || "Novo";
+}
+
+function classeStatus(status) {
+
+  const classes = {
+    novo: "status-novo",
+    triagem: "status-triagem",
+    entrevistar: "status-entrevistar",
+    teste_pratico: "status-teste",
+    aprovado: "status-aprovado",
+    contratado: "status-contratado",
+    banco_talentos: "status-banco",
+    descartado: "status-descartado"
+  };
+
+  return classes[status] || "status-novo";
+}
 
 /* DESENHAR CARDS */
 
@@ -528,6 +762,14 @@ function desenhar(lista) {
         `<span class="tag">${esc(a)}</span>`;
     });
 
+    const statusAtual =
+      c.status || "novo";
+
+    const classificacao =
+      c.classificacao
+        ? ` · Classe ${esc(c.classificacao)}`
+        : "";
+
     card.innerHTML = `
       <h3>${esc(c.nome_completo || "Sem nome")}</h3>
 
@@ -550,6 +792,10 @@ function desenhar(lista) {
       <div class="tags">
         ${tags}
       </div>
+
+      <span class="status ${classeStatus(statusAtual)}">
+        ${esc(nomeStatus(statusAtual))}${classificacao}
+      </span>
     `;
 
     card.onclick =
@@ -560,10 +806,11 @@ function desenhar(lista) {
   });
 }
 
-
 /* FICHA */
 
 function abrirFicha(c) {
+
+  candidatoAberto = c;
 
   document.getElementById("fichaNome")
     .innerText =
@@ -577,11 +824,8 @@ function abrirFicha(c) {
   const nomes = {
 
     idade:"Idade",
-
     bairro:"Bairro",
-
     cidade:"Cidade",
-
     telefone:"WhatsApp / Telefone",
 
     tempo_experiencia:
@@ -600,25 +844,39 @@ function abrirFicha(c) {
       "Disponibilidade para viagens",
 
     observacoes:
-      "Observações",
+      "Observações do candidato",
 
     criado_em:
       "Cadastro realizado em"
 
   };
 
+  const camposInternos = [
+    "status",
+    "classificacao",
+    "avaliacao_profissional",
+    "avaliacao_comportamental",
+    "alerta_profissional_aci",
+    "alerta_comportamenta",
+    "alerta_restricao_opera",
+    "observacoes_sistema"
+  ];
+
   Object.keys(c).forEach(campo => {
 
     if(
       campo === "id" ||
-      campo === "nome_completo"
+      campo === "nome_completo" ||
+      camposInternos.includes(campo)
     ) return;
 
     let valor = c[campo];
 
-    if(valor === null ||
-       valor === undefined ||
-       valor === "") return;
+    if(
+      valor === null ||
+      valor === undefined ||
+      valor === ""
+    ) return;
 
     if(Array.isArray(valor))
       valor = valor.join(", ");
@@ -639,18 +897,135 @@ function abrirFicha(c) {
 
   });
 
+  /* CARREGAR AVALIAÇÃO INTERNA */
+
+  document.getElementById("rhStatus").value =
+    c.status || "novo";
+
+  document.getElementById("rhClassificacao").value =
+    c.classificacao || "";
+
+  document.getElementById("rhProfissional").value =
+    c.avaliacao_profissional ?? "";
+
+  document.getElementById("rhComportamental").value =
+    c.avaliacao_comportamental ?? "";
+
+  document.getElementById("rhAlertaProfissional").checked =
+    !!c.alerta_profissional_aci;
+
+  document.getElementById("rhAlertaComportamental").checked =
+    !!c.alerta_comportamenta;
+
+  document.getElementById("rhAlertaRestricao").checked =
+    !!c.alerta_restricao_opera;
+
+  document.getElementById("rhObservacoes").value =
+    c.observacoes_sistema || "";
+
+  document.getElementById("mensagemSalvar")
+    .innerText = "";
+
   document.getElementById("modal")
     .style.display = "block";
 }
 
+/* SALVAR AVALIAÇÃO */
+
+async function salvarAvaliacao() {
+
+  if(!candidatoAberto) return;
+
+  const botao =
+    document.getElementById("botaoSalvar");
+
+  const mensagem =
+    document.getElementById("mensagemSalvar");
+
+  botao.disabled = true;
+  botao.innerText = "SALVANDO...";
+  mensagem.innerText = "";
+
+  const profissional =
+    document.getElementById("rhProfissional").value;
+
+  const comportamental =
+    document.getElementById("rhComportamental").value;
+
+  const alteracoes = {
+
+    status:
+      document.getElementById("rhStatus").value,
+
+    classificacao:
+      document.getElementById("rhClassificacao").value || null,
+
+    avaliacao_profissional:
+      profissional ? Number(profissional) : null,
+
+    avaliacao_comportamental:
+      comportamental ? Number(comportamental) : null,
+
+    alerta_profissional_aci:
+      document.getElementById("rhAlertaProfissional").checked,
+
+    alerta_comportamenta:
+      document.getElementById("rhAlertaComportamental").checked,
+
+    alerta_restricao_opera:
+      document.getElementById("rhAlertaRestricao").checked,
+
+    observacoes_sistema:
+      document.getElementById("rhObservacoes").value.trim() || null
+
+  };
+
+  const { data, error } =
+    await supabaseClient
+      .from("candidatos")
+      .update(alteracoes)
+      .eq("id", candidatoAberto.id)
+      .select()
+      .single();
+
+  botao.disabled = false;
+  botao.innerText = "SALVAR AVALIAÇÃO";
+
+  if(error) {
+
+    console.error(error);
+
+    mensagem.style.color = "#b00020";
+    mensagem.innerText = "Erro ao salvar.";
+
+    return;
+  }
+
+  candidatoAberto = data;
+
+  const indice =
+    candidatos.findIndex(
+      c => c.id === data.id
+    );
+
+  if(indice !== -1)
+    candidatos[indice] = data;
+
+  mensagem.style.color = "#15803d";
+  mensagem.innerText = "Salvo com sucesso.";
+
+  filtrar();
+}
+
+/* FECHAR */
 
 function fecharFicha() {
 
   document.getElementById("modal")
     .style.display = "none";
 
+  candidatoAberto = null;
 }
-
 
 /* LOGOUT */
 
@@ -659,9 +1034,7 @@ async function sair() {
   await supabaseClient.auth.signOut();
 
   location.reload();
-
 }
-
 
 /* SEGURANÇA DE TEXTO */
 
@@ -673,9 +1046,7 @@ function esc(valor) {
     .replaceAll(">","&gt;")
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
-
 }
-
 
 /* VERIFICAR SESSÃO */
 
@@ -686,7 +1057,6 @@ async function verificarLogin() {
 
   if(data.session)
     abrirPainel();
-
 }
 
 verificarLogin();
