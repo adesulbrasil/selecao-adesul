@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trabalhe Conosco | Adesul</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f5f7;
+      color: #222;
+    }
+
+    .topo {
+      background: #111;
+      color: white;
+      padding: 28px 20px;
+      text-align: center;
+    }
+
+    .topo h1 {
+      margin: 0;
+      font-size: 30px;
+    }
+
+    .topo p {
+      margin: 8px 0 0;
+      color: #ccc;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: white;
+      padding: 32px;
+      border-radius: 12px;
+      box-shadow: 0 3px 15px rgba(0,0,0,.08);
+    }
+
+    h2 {
+      margin-top: 30px;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 8px;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      font-weight: bold;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 100px;
+    }
+
+    .checks label {
+      font-weight: normal;
+      margin: 9px 0;
+    }
+
+    .checks input {
+      width: auto;
+      margin-right: 8px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 30px;
+      padding: 16px;
+      background: #111;
+      color: white;
+      border: 0;
+      border-radius: 7px;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    #mensagem {
+      margin-top: 20px;
+      padding: 12px;
+      display: none;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="topo">
+  <h1>ADESUL</h1>
+  <p>Cadastro de candidatos</p>
+</div>
+
+<div class="container">
+
+<form id="formCandidato">
+
+  <h2>Seus dados</h2>
+
+  <label>Nome completo *</label>
+  <input id="nome" required>
+
+  <label>Idade *</label>
+  <input id="idade" type="number" min="16" max="80" required>
+
+  <label>Bairro *</label>
+  <input id="bairro" required>
+
+  <label>Cidade *</label>
+  <input id="cidade" required>
+
+  <label>Telefone / WhatsApp *</label>
+  <input id="telefone" required>
+
+  <h2>Experiência profissional</h2>
+
+  <label>Quanto tempo de experiência profissional você possui?</label>
+  <select id="tempo_experiencia">
+    <option value="">Selecione</option>
+    <option>Sem experiência</option>
+    <option>Menos de 1 ano</option>
+    <option>1 a 3 anos</option>
+    <option>3 a 5 anos</option>
+    <option>Mais de 5 anos</option>
+    <option>Mais de 10 anos</option>
+  </select>
+
+  <label>Em quais áreas você já trabalhou?</label>
+
+  <div class="checks" id="areasExperiencia">
+    <label><input type="checkbox" value="Marcenaria"> Marcenaria</label>
+    <label><input type="checkbox" value="Serralheria"> Serralheria / Solda</label>
+    <label><input type="checkbox" value="Pintura"> Pintura</label>
+    <label><input type="checkbox" value="Montagem"> Montagem</label>
+    <label><input type="checkbox" value="Acabamento gráfico"> Acabamento gráfico</label>
+    <label><input type="checkbox" value="Adesivagem"> Adesivagem</label>
+    <label><input type="checkbox" value="Funilaria"> Funilaria</label>
+    <label><input type="checkbox" value="Tapeçaria"> Tapeçaria</label>
+    <label><input type="checkbox" value="Elétrica"> Elétrica</label>
+    <label><input type="checkbox" value="Construção"> Construção / Obras</label>
+  </div>
+
+  <label>Conte um pouco sobre seus últimos trabalhos</label>
+  <textarea id="descricao_experiencia"></textarea>
+
+  <h2>O que você gostaria de fazer?</h2>
+
+  <div class="checks" id="areasInteresse">
+    <label><input type="checkbox" value="Produção"> Produção</label>
+    <label><input type="checkbox" value="Montagem"> Montagem</label>
+    <label><input type="checkbox" value="Instalação externa"> Instalação externa</label>
+    <label><input type="checkbox" value="Marcenaria"> Marcenaria</label>
+    <label><input type="checkbox" value="Serralheria"> Serralheria</label>
+    <label><input type="checkbox" value="Acabamento gráfico"> Acabamento gráfico</label>
+    <label><input type="checkbox" value="Pintura"> Pintura</label>
+  </div>
+
+  <label>Outro interesse profissional</label>
+  <input id="outro_interesse_profissional">
+
+  <button id="botao" type="submit">ENVIAR CADASTRO</button>
+
+  <div id="mensagem"></div>
+
+</form>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL = "https://hetkropzbpsybgbavvwfd.supabase.co";
+
+  const SUPABASE_KEY = "sb_publishable_rhrhtkOhmIX8DpFlQFvEEg_IdaTVtgu";
+
+  const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+  function selecionados(id) {
+    return Array.from(
+      document.querySelectorAll("#" + id + " input:checked")
+    ).map(item => item.value);
+  }
+
+  document
+    .getElementById("formCandidato")
+    .addEventListener("submit", async function(event) {
+
+      event.preventDefault();
+
+      const botao = document.getElementById("botao");
+      const mensagem = document.getElementById("mensagem");
+
+      botao.disabled = true;
+      botao.innerText = "ENVIANDO...";
+
+      const dados = {
+        nome_completo: document.getElementById("nome").value,
+        idade: Number(document.getElementById("idade").value),
+        bairro: document.getElementById("bairro").value,
+        cidade: document.getElementById("cidade").value,
+        telefone: document.getElementById("telefone").value,
+
+        tempo_experiencia:
+          document.getElementById("tempo_experiencia").value,
+
+        areas_experiencia:
+          selecionados("areasExperiencia"),
+
+        descricao_experiencia:
+          document.getElementById("descricao_experiencia").value,
+
+        areas_interesse:
+          selecionados("areasInteresse"),
+
+        outro_interesse_profissional:
+          document.getElementById("outro_interesse_profissional").value
+      };
+
+      const { error } = await supabaseClient
+        .from("candidatos")
+        .insert([dados]);
+
+      if (error) {
+
+        console.error(error);
+
+        mensagem.style.display = "block";
+        mensagem.style.background = "#ffe5e5";
+        mensagem.innerText =
+          "Não foi possível enviar. Tente novamente.";
+
+      } else {
+
+        mensagem.style.display = "block";
+        mensagem.style.background = "#e5ffe9";
+        mensagem.innerText =
+          "Cadastro enviado com sucesso! Obrigado pelo interesse em trabalhar conosco.";
+
+        document
+          .getElementById("formCandidato")
+          .reset();
+      }
+
+      botao.disabled = false;
+      botao.innerText = "ENVIAR CADASTRO";
+    });
+</script>
+
+</body>
+</html>
