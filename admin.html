@@ -3,118 +3,204 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Seleção Adesul | Painel RH</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f3f4f6;color:#202020}
-.topo{background:#111;color:white;padding:22px 30px}
-.topo h1{margin:0;font-size:25px}
-.topo p{margin:5px 0 0;color:#bbb}
-.container{max-width:1350px;margin:30px auto;padding:0 20px}
-.card{background:white;border-radius:10px;padding:25px;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:20px}
 
-#login{max-width:450px;margin:70px auto}
-
-input,textarea{
-width:100%;
-padding:12px;
-margin:6px 0 15px;
-border:1px solid #ccc;
-border-radius:6px;
-font-size:15px;
-font-family:Arial,Helvetica,sans-serif
+*{
+  box-sizing:border-box;
 }
 
-textarea{min-height:120px;resize:vertical}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f3f4f6;
+  color:#202020;
+}
+
+.topo{
+  background:#111;
+  color:white;
+  padding:22px 30px;
+}
+
+.topo h1{
+  margin:0;
+  font-size:25px;
+}
+
+.topo p{
+  margin:5px 0 0;
+  color:#bbb;
+}
+
+.container{
+  max-width:1400px;
+  margin:30px auto;
+  padding:0 20px;
+}
+
+.card{
+  background:white;
+  border-radius:10px;
+  padding:25px;
+  box-shadow:0 2px 10px rgba(0,0,0,.08);
+  margin-bottom:20px;
+}
+
+/* LOGIN */
+
+#login{
+  max-width:450px;
+  margin:70px auto;
+}
+
+input,
+textarea,
+select{
+  width:100%;
+  padding:11px;
+  border:1px solid #ccc;
+  border-radius:6px;
+  background:white;
+  font-size:15px;
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+input,
+textarea{
+  margin:6px 0 15px;
+}
+
+textarea{
+  min-height:120px;
+  resize:vertical;
+}
 
 button{
-border:0;
-border-radius:6px;
-background:#111;
-color:white;
-padding:11px 18px;
-cursor:pointer;
-font-size:14px
+  border:0;
+  border-radius:6px;
+  background:#111;
+  color:white;
+  padding:11px 18px;
+  cursor:pointer;
+  font-size:14px;
 }
 
-button:hover{background:#333}
-button:disabled{opacity:.6;cursor:wait}
-#erro{color:#b00020;margin-top:15px}
-#painel{display:none}
+button:hover{
+  background:#333;
+}
+
+button:disabled{
+  opacity:.6;
+  cursor:wait;
+}
+
+#erro{
+  color:#b00020;
+  margin-top:15px;
+}
+
+#painel{
+  display:none;
+}
+
+/* FILTROS */
 
 .barra{
-display:grid;
-grid-template-columns:2fr 1fr 1fr auto;
-gap:12px;
-align-items:center
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr auto;
+  gap:10px;
+  align-items:center;
 }
 
-.barra input,.barra select{margin:0;height:44px}
-
-select{
-width:100%;
-padding:10px;
-border:1px solid #ccc;
-border-radius:6px;
-background:white;
-font-size:15px
+.barra input,
+.barra select{
+  margin:0;
+  height:44px;
 }
 
-.resumo{display:flex;gap:15px;margin:20px 0;flex-wrap:wrap}
+.resumo{
+  display:flex;
+  gap:15px;
+  margin:20px 0;
+  flex-wrap:wrap;
+}
 
 .numero{
-background:white;
-border-radius:8px;
-padding:15px 20px;
-min-width:170px;
-box-shadow:0 2px 8px rgba(0,0,0,.06)
+  background:white;
+  border-radius:8px;
+  padding:15px 20px;
+  min-width:170px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
 }
 
-.numero strong{display:block;font-size:27px}
+.numero strong{
+  display:block;
+  font-size:27px;
+}
+
+/* CARDS */
 
 #lista{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-gap:15px
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+  gap:15px;
 }
 
 .candidato{
-background:white;
-border-radius:9px;
-padding:20px;
-border-left:5px solid #111;
-box-shadow:0 2px 8px rgba(0,0,0,.06);
-cursor:pointer;
-transition:.15s
+  background:white;
+  border-radius:9px;
+  padding:20px;
+  border-left:5px solid #111;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+  cursor:pointer;
+  transition:.15s;
 }
 
 .candidato:hover{
-transform:translateY(-2px);
-box-shadow:0 4px 13px rgba(0,0,0,.12)
+  transform:translateY(-2px);
+  box-shadow:0 4px 13px rgba(0,0,0,.12);
 }
 
-.candidato h3{margin:0 0 8px}
-.candidato p{margin:5px 0;color:#555}
-.tags{margin-top:12px}
+.candidato h3{
+  margin:0 0 10px;
+}
+
+.candidato p{
+  margin:5px 0;
+  color:#555;
+}
+
+.tags{
+  margin-top:10px;
+}
 
 .tag{
-display:inline-block;
-background:#eee;
-border-radius:20px;
-padding:5px 9px;
-margin:3px 3px 0 0;
-font-size:12px
+  display:inline-block;
+  background:#eee;
+  border-radius:20px;
+  padding:5px 9px;
+  margin:3px 3px 0 0;
+  font-size:12px;
 }
 
-.status{
-display:inline-block;
-margin-top:14px;
-padding:6px 10px;
-border-radius:5px;
-font-size:12px;
-font-weight:bold
+.linha-badges{
+  margin-top:14px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.badge{
+  display:inline-block;
+  padding:6px 9px;
+  border-radius:5px;
+  font-size:12px;
+  font-weight:bold;
 }
 
 .status-novo{background:#e5e7eb}
@@ -126,303 +212,555 @@ font-weight:bold
 .status-banco{background:#e0f2fe}
 .status-descartado{background:#fee2e2}
 
+.classe-prioridade{background:#dcfce7}
+.classe-auxiliar{background:#dbeafe}
+.classe-analisar{background:#fef3c7}
+.classe-nao{background:#fee2e2}
+.classe-neutra{background:#eee}
+
+/* MODAL */
+
 #modal{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.65);
-padding:30px;
-overflow-y:auto;
-z-index:999
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  padding:30px;
+  overflow-y:auto;
+  z-index:999;
 }
 
 .modal-box{
-background:white;
-max-width:900px;
-margin:20px auto;
-border-radius:10px;
-padding:30px
+  background:white;
+  max-width:950px;
+  margin:20px auto;
+  border-radius:10px;
+  padding:30px;
 }
 
-.modal-box h2{margin-top:0}
-.linha{padding:9px 0;border-bottom:1px solid #eee}
-.fechar{float:right;background:#777}
-.sair{background:#777}
+.modal-box h2{
+  margin-top:0;
+}
+
+.fechar{
+  float:right;
+  background:#777;
+}
+
+.sair{
+  background:#777;
+}
+
+/* TRIAGEM */
+
+.triagem{
+  margin:20px 0;
+  padding:20px;
+  border-radius:10px;
+  background:#f5f5f5;
+  border:1px solid #ddd;
+}
+
+.triagem h3{
+  margin:0 0 15px;
+}
+
+.grid-indicadores{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.indicador{
+  background:white;
+  border-radius:8px;
+  padding:15px;
+  border:1px solid #e4e4e4;
+}
+
+.indicador small{
+  display:block;
+  color:#666;
+  margin-bottom:6px;
+}
+
+.indicador strong{
+  font-size:20px;
+}
+
+.alertas{
+  margin-top:15px;
+}
+
+.alerta{
+  display:inline-block;
+  margin:4px 4px 0 0;
+  padding:7px 10px;
+  border-radius:5px;
+  background:#fee2e2;
+  color:#991b1b;
+  font-size:13px;
+  font-weight:bold;
+}
+
+.sem-alerta{
+  color:#166534;
+  font-size:14px;
+  font-weight:bold;
+}
+
+/* TÉCNICO */
+
+.secao{
+  margin-top:25px;
+}
+
+.secao h3{
+  margin-bottom:10px;
+}
+
+.tabela-tecnica{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.tabela-tecnica td{
+  border-bottom:1px solid #eee;
+  padding:8px 5px;
+}
+
+.tabela-tecnica td:last-child{
+  text-align:right;
+  font-weight:bold;
+}
+
+.nivel-forte{
+  color:#15803d;
+}
+
+.nivel-medio{
+  color:#92400e;
+}
+
+.nivel-baixo{
+  color:#666;
+}
+
+/* FICHA */
+
+.linha{
+  padding:9px 0;
+  border-bottom:1px solid #eee;
+}
+
+.linha strong{
+  display:inline-block;
+  min-width:210px;
+}
+
+/* GESTÃO */
 
 .bloco-rh{
-background:#f5f5f5;
-border-radius:10px;
-padding:22px;
-margin-top:25px;
-border:1px solid #e5e5e5
+  background:#f5f5f5;
+  border-radius:10px;
+  padding:22px;
+  margin-top:25px;
+  border:1px solid #ddd;
 }
 
-.bloco-rh h3{margin:0 0 5px}
-
-.subtitulo-rh{
-color:#666;
-font-size:14px;
-margin:0 0 20px
+.bloco-rh h3{
+  margin-top:0;
 }
 
 .grid-rh{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px
+  display:grid;
+  grid-template-columns:1fr;
+  gap:15px;
 }
 
 .campo-rh label{
-display:block;
-font-weight:bold;
-margin-bottom:5px
+  display:block;
+  font-weight:bold;
+  margin-bottom:6px;
 }
 
-.checks{
-display:grid;
-gap:10px;
-margin:20px 0
+.salvar{
+  background:#15803d;
+  margin-top:5px;
 }
 
-.check-item{
-display:flex;
-align-items:center;
-gap:10px;
-background:white;
-border-radius:6px;
-padding:12px;
-border:1px solid #e5e5e5
+.salvar:hover{
+  background:#166534;
 }
 
-.check-item input{width:auto;margin:0}
-.salvar{background:#15803d;margin-top:5px}
-.salvar:hover{background:#166534}
-#mensagemSalvar{margin-left:12px;font-weight:bold}
-
-@media(max-width:700px){
-.barra,.grid-rh{grid-template-columns:1fr}
-.resumo{display:block}
-.numero{margin-bottom:10px}
-#modal{padding:10px}
-.modal-box{padding:20px}
+#mensagemSalvar{
+  margin-left:12px;
+  font-weight:bold;
 }
+
+@media(max-width:850px){
+
+  .barra{
+    grid-template-columns:1fr;
+  }
+
+  .grid-indicadores{
+    grid-template-columns:1fr 1fr;
+  }
+
+}
+
+@media(max-width:600px){
+
+  .grid-indicadores{
+    grid-template-columns:1fr;
+  }
+
+  #modal{
+    padding:10px;
+  }
+
+  .modal-box{
+    padding:20px;
+  }
+
+  .linha strong{
+    display:block;
+    min-width:0;
+    margin-bottom:4px;
+  }
+
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="topo">
-<h1>ADESUL | Seleção de Pessoas</h1>
-<p>Painel interno de candidatos</p>
+
+  <h1>ADESUL | Seleção de Pessoas</h1>
+
+  <p>Painel interno de candidatos</p>
+
 </div>
+
+
+<!-- LOGIN -->
 
 <div id="login" class="card">
 
-<h2>Acesso interno</h2>
+  <h2>Acesso interno</h2>
 
-<label>E-mail</label>
-<input id="email" type="email" placeholder="seuemail@adesul.com">
+  <label>E-mail</label>
 
-<label>Senha</label>
-<input id="senha" type="password" placeholder="Senha">
+  <input
+    id="email"
+    type="email"
+    placeholder="seuemail@adesul.com"
+  >
 
-<button onclick="entrar()">ENTRAR</button>
+  <label>Senha</label>
 
-<div id="erro"></div>
+  <input
+    id="senha"
+    type="password"
+    placeholder="Senha"
+  >
+
+  <button onclick="entrar()">
+    ENTRAR
+  </button>
+
+  <div id="erro"></div>
 
 </div>
+
+
+<!-- PAINEL -->
 
 <div id="painel" class="container">
 
-<div class="card">
+  <div class="card">
 
-<button class="sair" onclick="sair()" style="float:right">
-SAIR
-</button>
+    <button
+      class="sair"
+      onclick="sair()"
+      style="float:right"
+    >
+      SAIR
+    </button>
 
-<h2>Banco de candidatos</h2>
+    <h2>Banco de candidatos</h2>
 
-<div class="barra">
+    <div class="barra">
 
-<input
-id="busca"
-type="text"
-placeholder="Buscar por nome, bairro, cidade..."
-oninput="filtrar()"
->
+      <input
+        id="busca"
+        type="text"
+        placeholder="Buscar nome, bairro, cidade..."
+        oninput="filtrar()"
+      >
 
-<select id="filtroArea" onchange="filtrar()">
-<option value="">Todas as experiências</option>
-<option>Marcenaria</option>
-<option>Serralheria</option>
-<option>Pintura</option>
-<option>Montagem</option>
-<option>Acabamento gráfico</option>
-<option>Adesivagem</option>
-<option>Funilaria</option>
-<option>Tapeçaria</option>
-<option>Elétrica</option>
-<option>Obras</option>
-</select>
+      <select
+        id="filtroArea"
+        onchange="filtrar()"
+      >
+        <option value="">Todas as experiências</option>
+        <option>Marcenaria</option>
+        <option>Serralheria</option>
+        <option>Comunicação visual</option>
+        <option>Montagem</option>
+        <option>Pintura</option>
+        <option>Funilaria</option>
+        <option>Elétrica</option>
+        <option>Acabamento gráfico</option>
+        <option>Adesivagem</option>
+        <option>Tapeçaria</option>
+        <option>Construção civil</option>
+      </select>
 
-<select id="filtroStatus" onchange="filtrar()">
-<option value="">Todos os status</option>
-<option value="novo">Novo</option>
-<option value="triagem">Triagem</option>
-<option value="entrevistar">Entrevistar</option>
-<option value="teste_pratico">Teste prático</option>
-<option value="aprovado">Aprovado</option>
-<option value="contratado">Contratado</option>
-<option value="banco_talentos">Banco de talentos</option>
-<option value="descartado">Descartado</option>
-</select>
+      <select
+        id="filtroClassificacao"
+        onchange="filtrar()"
+      >
+        <option value="">Todas as classificações</option>
+        <option value="prioridade">Prioridade</option>
+        <option value="auxiliar">Auxiliar / Potencial</option>
+        <option value="analisar">Analisar</option>
+        <option value="nao aderente">Não aderente</option>
+      </select>
 
-<button onclick="carregarCandidatos()">
-ATUALIZAR
-</button>
+      <select
+        id="filtroStatus"
+        onchange="filtrar()"
+      >
+        <option value="">Todos os status</option>
+        <option value="novo">Novo</option>
+        <option value="triagem">Triagem</option>
+        <option value="entrevistar">Entrevistar</option>
+        <option value="teste_pratico">Teste prático</option>
+        <option value="aprovado">Aprovado</option>
+        <option value="contratado">Contratado</option>
+        <option value="banco_talentos">Banco de talentos</option>
+        <option value="descartado">Descartado</option>
+      </select>
+
+      <button onclick="carregarCandidatos()">
+        ATUALIZAR
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="resumo">
+
+    <div class="numero">
+
+      <strong id="total">0</strong>
+
+      candidatos
+
+    </div>
+
+    <div class="numero">
+
+      <strong id="exibidos">0</strong>
+
+      exibidos
+
+    </div>
+
+  </div>
+
+
+  <div id="lista"></div>
 
 </div>
-</div>
 
-<div class="resumo">
 
-<div class="numero">
-<strong id="total">0</strong>
-candidatos
-</div>
-
-<div class="numero">
-<strong id="exibidos">0</strong>
-exibidos
-</div>
-
-</div>
-
-<div id="lista"></div>
-
-</div>
+<!-- MODAL -->
 
 <div id="modal">
 
-<div class="modal-box">
+  <div class="modal-box">
 
-<button class="fechar" onclick="fecharFicha()">
-FECHAR
-</button>
+    <button
+      class="fechar"
+      onclick="fecharFicha()"
+    >
+      FECHAR
+    </button>
 
-<h2 id="fichaNome">Candidato</h2>
+    <h2 id="fichaNome">
+      Candidato
+    </h2>
 
-<div id="ficha"></div>
 
-<div class="bloco-rh">
+    <!-- RESULTADO AUTOMÁTICO -->
 
-<h3>Avaliação interna Adesul</h3>
+    <div class="triagem">
 
-<p class="subtitulo-rh">
-Informações internas da seleção. Não fazem parte do cadastro preenchido pelo candidato.
-</p>
+      <h3>Triagem automática</h3>
 
-<div class="grid-rh">
+      <div class="grid-indicadores">
 
-<div class="campo-rh">
+        <div class="indicador">
 
-<label>Status do candidato</label>
+          <small>Pontuação técnica</small>
 
-<select id="rhStatus">
-<option value="novo">Novo</option>
-<option value="triagem">Triagem</option>
-<option value="entrevistar">Entrevistar</option>
-<option value="teste_pratico">Teste prático</option>
-<option value="aprovado">Aprovado</option>
-<option value="contratado">Contratado</option>
-<option value="banco_talentos">Banco de talentos</option>
-<option value="descartado">Descartado</option>
-</select>
+          <strong id="resultadoTecnico">
+            -
+          </strong>
+
+        </div>
+
+        <div class="indicador">
+
+          <small>Comportamental</small>
+
+          <strong id="resultadoComportamental">
+            -
+          </strong>
+
+        </div>
+
+        <div class="indicador">
+
+          <small>Afinidade profissional</small>
+
+          <strong id="resultadoAfinidade">
+            -
+          </strong>
+
+        </div>
+
+        <div class="indicador">
+
+          <small>Classificação</small>
+
+          <strong id="resultadoClassificacao">
+            -
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="resultadoAlertas"
+        class="alertas"
+      ></div>
+
+    </div>
+
+
+    <!-- MAPA TÉCNICO -->
+
+    <div class="secao">
+
+      <h3>Mapa técnico</h3>
+
+      <div id="mapaTecnico"></div>
+
+    </div>
+
+
+    <!-- CADASTRO -->
+
+    <div class="secao">
+
+      <h3>Ficha do candidato</h3>
+
+      <div id="ficha"></div>
+
+    </div>
+
+
+    <!-- GESTÃO INTERNA -->
+
+    <div class="bloco-rh">
+
+      <h3>Gestão da seleção</h3>
+
+      <div class="grid-rh">
+
+        <div class="campo-rh">
+
+          <label>Status</label>
+
+          <select id="rhStatus">
+
+            <option value="novo">
+              Novo
+            </option>
+
+            <option value="triagem">
+              Triagem
+            </option>
+
+            <option value="entrevistar">
+              Entrevistar
+            </option>
+
+            <option value="teste_pratico">
+              Teste prático
+            </option>
+
+            <option value="aprovado">
+              Aprovado
+            </option>
+
+            <option value="contratado">
+              Contratado
+            </option>
+
+            <option value="banco_talentos">
+              Banco de talentos
+            </option>
+
+            <option value="descartado">
+              Descartado
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="campo-rh">
+
+          <label>Observações internas</label>
+
+          <textarea
+            id="rhObservacoes"
+            placeholder="Entrevista, pretensão salarial, disponibilidade, impressão do entrevistador, teste prático..."
+          ></textarea>
+
+        </div>
+
+      </div>
+
+
+      <button
+        id="botaoSalvar"
+        class="salvar"
+        onclick="salvarAvaliacao()"
+      >
+        SALVAR
+      </button>
+
+      <span id="mensagemSalvar"></span>
+
+    </div>
+
+  </div>
 
 </div>
 
-<div class="campo-rh">
-
-<label>Classificação</label>
-
-<select id="rhClassificacao">
-<option value="">Não classificado</option>
-<option value="A">A - Forte candidato</option>
-<option value="B">B - Bom candidato</option>
-<option value="C">C - Avaliar</option>
-<option value="D">D - Baixa aderência</option>
-</select>
-
-</div>
-
-</div>
-
-<div class="checks">
-
-<label class="check-item">
-
-<input type="checkbox" id="rhAlertaProfissional">
-
-<span>
-<strong>Alerta profissional / técnico</strong><br>
-<small>
-Algum ponto da experiência ou capacidade técnica merece atenção.
-</small>
-</span>
-
-</label>
-
-<label class="check-item">
-
-<input type="checkbox" id="rhAlertaComportamental">
-
-<span>
-<strong>Alerta comportamental</strong><br>
-<small>
-Algum ponto observado na entrevista merece atenção.
-</small>
-</span>
-
-</label>
-
-<label class="check-item">
-
-<input type="checkbox" id="rhAlertaRestricao">
-
-<span>
-<strong>Restrição operacional / disponibilidade</strong><br>
-<small>
-Horários, viagens, finais de semana ou outra limitação operacional.
-</small>
-</span>
-
-</label>
-
-</div>
-
-<div class="campo-rh">
-
-<label>Observações internas</label>
-
-<textarea
-id="rhObservacoes"
-placeholder="Anotações da entrevista, pontos fortes, dúvidas, pretensão salarial, disponibilidade, resultado do teste prático..."
-></textarea>
-
-</div>
-
-<button
-id="botaoSalvar"
-class="salvar"
-onclick="salvarAvaliacao()"
->
-SALVAR AVALIAÇÃO
-</button>
-
-<span id="mensagemSalvar"></span>
-
-</div>
-</div>
-</div>
 
 <script>
 
@@ -434,8 +772,8 @@ const SUPABASE_KEY =
 
 const supabaseClient =
 supabase.createClient(
-SUPABASE_URL,
-SUPABASE_KEY
+  SUPABASE_URL,
+  SUPABASE_KEY
 );
 
 let candidatos = [];
@@ -443,568 +781,1393 @@ let candidatos = [];
 let candidatoAberto = null;
 
 
-async function entrar() {
+/* MAPA DAS 14 HABILIDADES */
 
-const email =
-document.getElementById("email").value.trim();
+const habilidades = [
 
-const senha =
-document.getElementById("senha").value;
+  ["nivel_marcenaria",
+   "Marcenaria"],
 
-const erro =
-document.getElementById("erro");
+  ["nivel_serralheria",
+   "Serralheria"],
 
-erro.innerText =
-"Entrando...";
+  ["nivel_comunicacao_visual",
+   "Comunicação visual"],
 
-const { error } =
-await supabaseClient.auth.signInWithPassword({
-email: email,
-password: senha
-});
+  ["nivel_montagem_eventos",
+   "Montagem de eventos"],
 
-if(error) {
+  ["nivel_montagem_moveis",
+   "Montagem de móveis"],
 
-console.error(error);
+  ["nivel_instalacao_externa",
+   "Instalação externa"],
 
-erro.innerText =
-"Não foi possível entrar. Verifique o e-mail e a senha.";
+  ["nivel_pintura",
+   "Pintura"],
 
-return;
+  ["nivel_funilaria",
+   "Funilaria"],
 
-}
+  ["nivel_eletrica",
+   "Elétrica"],
 
-erro.innerText = "";
+  ["nivel_acabamento_grafico",
+   "Acabamento gráfico"],
 
-abrirPainel();
+  ["nivel_adesivagem",
+   "Adesivagem"],
 
-}
+  ["nivel_tensionamento",
+   "Tensionamento"],
 
+  ["nivel_tapecaria_revestimentos",
+   "Tapeçaria / revestimentos"],
 
-async function abrirPainel() {
+  ["nivel_construcao_civil",
+   "Construção civil"]
 
-document.getElementById("login").style.display =
-"none";
-
-document.getElementById("painel").style.display =
-"block";
-
-await carregarCandidatos();
-
-}
+];
 
 
-async function carregarCandidatos() {
+const nomesNivel = {
 
-const { data, error } =
-await supabaseClient
-.from("candidatos")
-.select("*")
-.order("criado_em", {
-ascending:false
-});
+  0:"Nunca fiz",
 
-if(error) {
+  1:"Já ajudei",
 
-console.error(error);
+  2:"Executo com orientação",
 
-alert(
-"Não foi possível carregar os candidatos."
-);
+  3:"Faço sozinho",
 
-return;
-
-}
-
-candidatos =
-data || [];
-
-document.getElementById("total").innerText =
-candidatos.length;
-
-filtrar();
-
-}
-
-
-function filtrar() {
-
-const busca =
-document.getElementById("busca")
-.value
-.toLowerCase();
-
-const area =
-document.getElementById("filtroArea")
-.value
-.toLowerCase();
-
-const status =
-document.getElementById("filtroStatus")
-.value;
-
-const filtrados =
-candidatos.filter(c => {
-
-const texto =
-JSON.stringify(c).toLowerCase();
-
-const experiencias =
-Array.isArray(c.areas_experiencia)
-? c.areas_experiencia.join(" ")
-: (c.areas_experiencia || "");
-
-const statusCandidato =
-c.status || "novo";
-
-const bateBusca =
-!busca ||
-texto.includes(busca);
-
-const bateArea =
-!area ||
-experiencias
-.toLowerCase()
-.includes(area);
-
-const bateStatus =
-!status ||
-statusCandidato === status;
-
-return (
-bateBusca &&
-bateArea &&
-bateStatus
-);
-
-});
-
-document.getElementById("exibidos").innerText =
-filtrados.length;
-
-desenhar(filtrados);
-
-}
-
-
-function nomeStatus(status) {
-
-const nomes = {
-
-novo:"Novo",
-
-triagem:"Triagem",
-
-entrevistar:"Entrevistar",
-
-teste_pratico:"Teste prático",
-
-aprovado:"Aprovado",
-
-contratado:"Contratado",
-
-banco_talentos:"Banco de talentos",
-
-descartado:"Descartado"
+  4:"Domino"
 
 };
 
-return nomes[status] || "Novo";
+
+/* LOGIN */
+
+async function entrar() {
+
+  const email =
+    document
+      .getElementById("email")
+      .value
+      .trim();
+
+
+  const senha =
+    document
+      .getElementById("senha")
+      .value;
+
+
+  const erro =
+    document
+      .getElementById("erro");
+
+
+  erro.innerText =
+    "Entrando...";
+
+
+  const { error } =
+    await supabaseClient
+      .auth
+      .signInWithPassword({
+
+        email:email,
+
+        password:senha
+
+      });
+
+
+  if(error) {
+
+    console.error(error);
+
+    erro.innerText =
+      "Não foi possível entrar. Verifique e-mail e senha.";
+
+    return;
+
+  }
+
+
+  erro.innerText = "";
+
+  abrirPainel();
+
+}
+
+
+/* PAINEL */
+
+async function abrirPainel() {
+
+  document
+    .getElementById("login")
+    .style.display =
+      "none";
+
+
+  document
+    .getElementById("painel")
+    .style.display =
+      "block";
+
+
+  await carregarCandidatos();
+
+}
+
+
+/* CARREGAR */
+
+async function carregarCandidatos() {
+
+  const { data, error } =
+    await supabaseClient
+
+      .from("candidatos")
+
+      .select("*")
+
+      .order(
+        "criado_em",
+        {
+          ascending:false
+        }
+      );
+
+
+  if(error) {
+
+    console.error(error);
+
+    alert(
+      "Não foi possível carregar os candidatos."
+    );
+
+    return;
+
+  }
+
+
+  candidatos =
+    data || [];
+
+
+  document
+    .getElementById("total")
+    .innerText =
+      candidatos.length;
+
+
+  filtrar();
+
+}
+
+
+/* NORMALIZAÇÃO */
+
+function normalizar(valor) {
+
+  return String(
+    valor || ""
+  )
+
+    .normalize("NFD")
+
+    .replace(
+      /[\u0300-\u036f]/g,
+      ""
+    )
+
+    .toLowerCase()
+
+    .trim();
+
+}
+
+
+/* FILTROS */
+
+function filtrar() {
+
+  const busca =
+    normalizar(
+      document
+        .getElementById("busca")
+        .value
+    );
+
+
+  const area =
+    normalizar(
+      document
+        .getElementById("filtroArea")
+        .value
+    );
+
+
+  const classificacao =
+    normalizar(
+      document
+        .getElementById("filtroClassificacao")
+        .value
+    );
+
+
+  const status =
+    document
+      .getElementById("filtroStatus")
+      .value;
+
+
+  const filtrados =
+    candidatos.filter(c => {
+
+
+      const texto =
+        normalizar(
+          JSON.stringify(c)
+        );
+
+
+      const bateBusca =
+        !busca ||
+        texto.includes(busca);
+
+
+      const bateArea =
+        !area ||
+        texto.includes(area);
+
+
+      const classe =
+        normalizar(
+          c.classificacao
+        );
+
+
+      let bateClasse =
+        true;
+
+
+      if(classificacao) {
+
+        if(
+          classificacao ===
+          "auxiliar"
+        ) {
+
+          bateClasse =
+            classe.includes(
+              "auxiliar"
+            );
+
+        }
+
+        else {
+
+          bateClasse =
+            classe.includes(
+              classificacao
+            );
+
+        }
+
+      }
+
+
+      const statusAtual =
+        c.status || "novo";
+
+
+      const bateStatus =
+        !status ||
+        statusAtual === status;
+
+
+      return (
+
+        bateBusca &&
+
+        bateArea &&
+
+        bateClasse &&
+
+        bateStatus
+
+      );
+
+    });
+
+
+  document
+    .getElementById("exibidos")
+    .innerText =
+      filtrados.length;
+
+
+  desenhar(filtrados);
+
+}
+
+
+/* PONTUAÇÃO TÉCNICA */
+
+/*
+Se o banco já tiver pontuação,
+usa o valor armazenado.
+
+Para candidatos antigos que tenham
+níveis técnicos preenchidos e nota
+ainda zero, o painel também consegue
+recalcular a técnica pelas 3 melhores:
+
+melhor x3
+segunda x2
+terceira x1
+
+máximo = 24.
+*/
+
+function calcularTecnica(c) {
+
+  const niveis =
+    habilidades
+      .map(([campo]) => {
+
+        const valor =
+          Number(c[campo]);
+
+        return Number.isFinite(valor)
+          ? valor
+          : 0;
+
+      })
+
+      .sort(
+        (a,b) => b-a
+      );
+
+
+  const calculada =
+    (niveis[0] || 0) * 3 +
+
+    (niveis[1] || 0) * 2 +
+
+    (niveis[2] || 0);
+
+
+  const armazenada =
+    Number(
+      c.pontuacao_tecnica
+    );
+
+
+  if(
+    Number.isFinite(armazenada) &&
+    armazenada > 0
+  ) {
+
+    return armazenada;
+
+  }
+
+
+  return calculada;
+
+}
+
+
+/* STATUS */
+
+function nomeStatus(status) {
+
+  const nomes = {
+
+    novo:"Novo",
+
+    triagem:"Triagem",
+
+    entrevistar:"Entrevistar",
+
+    teste_pratico:"Teste prático",
+
+    aprovado:"Aprovado",
+
+    contratado:"Contratado",
+
+    banco_talentos:
+      "Banco de talentos",
+
+    descartado:
+      "Descartado"
+
+  };
+
+
+  return nomes[status] ||
+    "Novo";
 
 }
 
 
 function classeStatus(status) {
 
-const classes = {
+  const classes = {
 
-novo:"status-novo",
+    novo:
+      "status-novo",
 
-triagem:"status-triagem",
+    triagem:
+      "status-triagem",
 
-entrevistar:"status-entrevistar",
+    entrevistar:
+      "status-entrevistar",
 
-teste_pratico:"status-teste",
+    teste_pratico:
+      "status-teste",
 
-aprovado:"status-aprovado",
+    aprovado:
+      "status-aprovado",
 
-contratado:"status-contratado",
+    contratado:
+      "status-contratado",
 
-banco_talentos:"status-banco",
+    banco_talentos:
+      "status-banco",
 
-descartado:"status-descartado"
+    descartado:
+      "status-descartado"
 
-};
+  };
 
-return classes[status] || "status-novo";
+
+  return classes[status] ||
+    "status-novo";
 
 }
 
+
+/* CLASSIFICAÇÃO */
+
+function classeClassificacao(valor) {
+
+  const t =
+    normalizar(valor);
+
+
+  if(
+    t.includes("prioridade")
+  ) {
+
+    return "classe-prioridade";
+
+  }
+
+
+  if(
+    t.includes("auxiliar") ||
+    t.includes("potencial")
+  ) {
+
+    return "classe-auxiliar";
+
+  }
+
+
+  if(
+    t.includes("analisar")
+  ) {
+
+    return "classe-analisar";
+
+  }
+
+
+  if(
+    t.includes("nao aderente")
+  ) {
+
+    return "classe-nao";
+
+  }
+
+
+  return "classe-neutra";
+
+}
+
+
+function nomeClassificacao(valor) {
+
+  if(
+    valor === null ||
+    valor === undefined ||
+    String(valor).trim() === ""
+  ) {
+
+    return "Não classificado";
+
+  }
+
+
+  return String(valor);
+
+}
+
+
+/* DESENHAR CARDS */
 
 function desenhar(lista) {
 
-const div =
-document.getElementById("lista");
+  const div =
+    document
+      .getElementById("lista");
 
-div.innerHTML = "";
 
-if(lista.length === 0) {
+  div.innerHTML = "";
 
-div.innerHTML =
-"<div class='card'>Nenhum candidato encontrado.</div>";
 
-return;
+  if(lista.length === 0) {
+
+    div.innerHTML =
+      "<div class='card'>Nenhum candidato encontrado.</div>";
+
+    return;
+
+  }
+
+
+  lista.forEach(c => {
+
+
+    const card =
+      document
+        .createElement("div");
+
+
+    card.className =
+      "candidato";
+
+
+    const tecnico =
+      calcularTecnica(c);
+
+
+    const comportamento =
+      Number(
+        c.pontuacao_comportamental
+      );
+
+
+    const statusAtual =
+      c.status || "novo";
+
+
+    const classificacao =
+      nomeClassificacao(
+        c.classificacao
+      );
+
+
+    const areas =
+      Array.isArray(
+        c.areas_experiencia
+      )
+
+        ? c.areas_experiencia
+
+        : [];
+
+
+    let tags = "";
+
+
+    areas.forEach(a => {
+
+      tags +=
+        `<span class="tag">
+          ${esc(a)}
+        </span>`;
+
+    });
+
+
+    card.innerHTML = `
+
+      <h3>
+        ${esc(
+          c.nome_completo ||
+          "Sem nome"
+        )}
+      </h3>
+
+      <p>
+        <strong>Idade:</strong>
+        ${esc(
+          c.idade ?? "-"
+        )}
+      </p>
+
+      <p>
+        <strong>Local:</strong>
+        ${esc(
+          c.bairro || "-"
+        )}
+        ${
+          c.cidade
+            ? " - " +
+              esc(c.cidade)
+            : ""
+        }
+      </p>
+
+      <p>
+        <strong>Técnica:</strong>
+        ${esc(tecnico)}/24
+
+        &nbsp; · &nbsp;
+
+        <strong>Comportamento:</strong>
+        ${
+          Number.isFinite(
+            comportamento
+          )
+
+            ? esc(comportamento)
+
+            : "-"
+        }/12
+      </p>
+
+      <p>
+        <strong>Afinidade:</strong>
+        ${esc(
+          c.afinidade_profissional ||
+          "-"
+        )}
+      </p>
+
+      <div class="tags">
+        ${tags}
+      </div>
+
+      <div class="linha-badges">
+
+        <span
+          class="badge ${classeStatus(statusAtual)}"
+        >
+          ${esc(
+            nomeStatus(statusAtual)
+          )}
+        </span>
+
+        <span
+          class="badge ${classeClassificacao(classificacao)}"
+        >
+          ${esc(classificacao)}
+        </span>
+
+      </div>
+
+    `;
+
+
+    card.onclick =
+      () => abrirFicha(c);
+
+
+    div.appendChild(card);
+
+  });
 
 }
 
-lista.forEach(c => {
 
-const card =
-document.createElement("div");
+/* MAPA TÉCNICO */
 
-card.className =
-"candidato";
+function desenharMapaTecnico(c) {
 
-const experiencias =
-Array.isArray(c.areas_experiencia)
-? c.areas_experiencia
-: [];
+  const div =
+    document
+      .getElementById("mapaTecnico");
 
-let tags = "";
 
-experiencias.forEach(a => {
+  let linhas = "";
 
-tags +=
-`<span class="tag">${esc(a)}</span>`;
 
-});
+  habilidades.forEach(
+    ([campo,nome]) => {
 
-const statusAtual =
-c.status || "novo";
 
-const classificacao =
-c.classificacao
-? ` · Classe ${esc(c.classificacao)}`
-: "";
+      const nivel =
+        Number(c[campo]);
 
-card.innerHTML = `
 
-<h3>
-${esc(c.nome_completo || "Sem nome")}
-</h3>
+      if(
+        !Number.isFinite(nivel)
+      ) {
 
-<p>
-<strong>Idade:</strong>
-${esc(c.idade ?? "-")}
-</p>
+        return;
 
-<p>
-<strong>Local:</strong>
-${esc(c.bairro || "-")}
-${c.cidade ? " - " + esc(c.cidade) : ""}
-</p>
+      }
 
-<p>
-<strong>Experiência:</strong>
-${esc(c.tempo_experiencia || "-")}
-</p>
 
-<div class="tags">
-${tags}
-</div>
+      let classe =
+        "nivel-baixo";
 
-<span class="status ${classeStatus(statusAtual)}">
-${esc(nomeStatus(statusAtual))}
-${classificacao}
-</span>
 
-`;
+      if(nivel >= 3) {
 
-card.onclick =
-() => abrirFicha(c);
+        classe =
+          "nivel-forte";
 
-div.appendChild(card);
+      }
 
-});
+      else if(nivel === 2) {
+
+        classe =
+          "nivel-medio";
+
+      }
+
+
+      linhas += `
+
+        <tr>
+
+          <td>
+            ${esc(nome)}
+          </td>
+
+          <td class="${classe}">
+            ${esc(nivel)}
+            -
+            ${esc(
+              nomesNivel[nivel] ||
+              "-"
+            )}
+          </td>
+
+        </tr>
+
+      `;
+
+    }
+  );
+
+
+  if(!linhas) {
+
+    div.innerHTML =
+      "<p>Níveis técnicos não preenchidos neste cadastro.</p>";
+
+    return;
+
+  }
+
+
+  div.innerHTML = `
+
+    <table class="tabela-tecnica">
+
+      ${linhas}
+
+    </table>
+
+  `;
 
 }
 
+
+/* FICHA */
 
 function abrirFicha(c) {
 
-candidatoAberto = c;
+  candidatoAberto = c;
 
-document.getElementById("fichaNome").innerText =
-c.nome_completo || "Candidato";
 
-const ficha =
-document.getElementById("ficha");
+  document
+    .getElementById("fichaNome")
+    .innerText =
+      c.nome_completo ||
+      "Candidato";
 
-ficha.innerHTML = "";
 
-const nomes = {
+  const tecnico =
+    calcularTecnica(c);
 
-idade:"Idade",
 
-bairro:"Bairro",
+  const comportamento =
+    Number(
+      c.pontuacao_comportamental
+    );
 
-cidade:"Cidade",
 
-telefone:"WhatsApp / Telefone",
+  document
+    .getElementById("resultadoTecnico")
+    .innerText =
+      tecnico + "/24";
 
-tempo_experiencia:
-"Tempo de experiência",
 
-areas_experiencia:
-"Conhecimentos / Experiências",
+  document
+    .getElementById("resultadoComportamental")
+    .innerText =
+      (
+        Number.isFinite(
+          comportamento
+        )
 
-interesses:
-"Áreas de interesse",
+          ? comportamento
 
-hora_extra:
-"Disponibilidade para hora extra",
+          : "-"
+      ) + "/12";
 
-viagem:
-"Disponibilidade para viagens",
 
-observacoes:
-"Observações do candidato",
+  document
+    .getElementById("resultadoAfinidade")
+    .innerText =
+      c.afinidade_profissional ||
+      "Não calculada";
 
-criado_em:
-"Cadastro realizado em"
 
-};
+  document
+    .getElementById("resultadoClassificacao")
+    .innerText =
+      nomeClassificacao(
+        c.classificacao
+      );
 
-const camposInternos = [
 
-"status",
+  /* ALERTAS */
 
-"classificacao",
+  const alertas =
+    document
+      .getElementById("resultadoAlertas");
 
-"alerta_profissional_aci",
 
-"alerta_comportamenta",
+  let htmlAlertas = "";
 
-"alerta_restricao_opera",
 
-"observacoes_sistema"
+  if(
+    c.alerta_profissional_acima_vaga
+  ) {
 
-];
+    htmlAlertas +=
+      `<span class="alerta">
+        Profissional possivelmente acima da vaga
+      </span>`;
 
-Object.keys(c).forEach(campo => {
+  }
 
-if(
-campo === "id" ||
-campo === "nome_completo" ||
-camposInternos.includes(campo)
-) return;
 
-let valor =
-c[campo];
+  if(
+    c.alerta_comportamental
+  ) {
 
-if(
-valor === null ||
-valor === undefined ||
-valor === ""
-) return;
+    htmlAlertas +=
+      `<span class="alerta">
+        Atenção comportamental
+      </span>`;
 
-if(Array.isArray(valor)) {
+  }
 
-valor =
-valor.join(", ");
+
+  if(
+    c.alerta_restricao_operacional
+  ) {
+
+    htmlAlertas +=
+      `<span class="alerta">
+        Restrição operacional
+      </span>`;
+
+  }
+
+
+  alertas.innerHTML =
+    htmlAlertas ||
+
+    `<span class="sem-alerta">
+      Sem alertas automáticos
+    </span>`;
+
+
+  desenharMapaTecnico(c);
+
+
+  /* DADOS DO CANDIDATO */
+
+  const ficha =
+    document
+      .getElementById("ficha");
+
+
+  ficha.innerHTML = "";
+
+
+  const camposInternos =
+    new Set([
+
+      "id",
+
+      "nome_completo",
+
+      "pontuacao_tecnica",
+
+      "pontuacao_comportamental",
+
+      "afinidade_profissional",
+
+      "classificacao",
+
+      "alerta_profissional_acima_vaga",
+
+      "alerta_comportamental",
+
+      "alerta_restricao_operacional",
+
+      "observacoes_sistema",
+
+      "status",
+
+      "validacoes_tecnicas",
+
+      ...habilidades.map(
+        ([campo]) => campo
+      )
+
+    ]);
+
+
+  const nomes = {
+
+    idade:
+      "Idade",
+
+    bairro:
+      "Bairro",
+
+    cidade:
+      "Cidade",
+
+    telefone:
+      "WhatsApp / telefone",
+
+    tempo_experiencia:
+      "Tempo de experiência",
+
+    areas_experiencia:
+      "Experiências declaradas",
+
+    areas_interesse:
+      "Áreas de interesse",
+
+    interesses:
+      "Áreas de interesse",
+
+    outro_interesse_profissional:
+      "Outro interesse profissional",
+
+    hora_extra:
+      "Disponibilidade para hora extra",
+
+    viagem:
+      "Disponibilidade para viagens",
+
+    observacoes:
+      "Observações do candidato",
+
+    autoriza_dados_selecao:
+      "Autorização de dados",
+
+    criado_em:
+      "Cadastro realizado em"
+
+  };
+
+
+  Object
+    .keys(c)
+    .forEach(campo => {
+
+
+      if(
+        camposInternos.has(campo)
+      ) {
+
+        return;
+
+      }
+
+
+      let valor =
+        c[campo];
+
+
+      if(
+        valor === null ||
+        valor === undefined ||
+        valor === ""
+      ) {
+
+        return;
+
+      }
+
+
+      if(
+        Array.isArray(valor)
+      ) {
+
+        valor =
+          valor.join(", ");
+
+      }
+
+
+      if(
+        typeof valor === "boolean"
+      ) {
+
+        valor =
+          valor
+            ? "Sim"
+            : "Não";
+
+      }
+
+
+      if(
+        campo === "criado_em"
+      ) {
+
+        valor =
+          formatarData(valor);
+
+      }
+
+
+      if(
+        typeof valor === "object"
+      ) {
+
+        valor =
+          JSON.stringify(valor);
+
+      }
+
+
+      const linha =
+        document
+          .createElement("div");
+
+
+      linha.className =
+        "linha";
+
+
+      linha.innerHTML = `
+
+        <strong>
+          ${esc(
+            nomes[campo] ||
+            tituloCampo(campo)
+          )}:
+        </strong>
+
+        ${esc(valor)}
+
+      `;
+
+
+      ficha.appendChild(linha);
+
+    });
+
+
+  /* GESTÃO INTERNA */
+
+  document
+    .getElementById("rhStatus")
+    .value =
+      c.status || "novo";
+
+
+  document
+    .getElementById("rhObservacoes")
+    .value =
+      c.observacoes_sistema ||
+      "";
+
+
+  document
+    .getElementById("mensagemSalvar")
+    .innerText =
+      "";
+
+
+  document
+    .getElementById("modal")
+    .style.display =
+      "block";
 
 }
 
-if(typeof valor === "boolean") {
 
-valor =
-valor ? "Sim" : "Não";
-
-}
-
-const linha =
-document.createElement("div");
-
-linha.className =
-"linha";
-
-linha.innerHTML =
-`<strong>${esc(nomes[campo] || campo)}:</strong> ${esc(valor)}`;
-
-ficha.appendChild(linha);
-
-});
-
-
-document.getElementById("rhStatus").value =
-c.status || "novo";
-
-document.getElementById("rhClassificacao").value =
-c.classificacao || "";
-
-document.getElementById("rhAlertaProfissional").checked =
-!!c.alerta_profissional_aci;
-
-document.getElementById("rhAlertaComportamental").checked =
-!!c.alerta_comportamenta;
-
-document.getElementById("rhAlertaRestricao").checked =
-!!c.alerta_restricao_opera;
-
-document.getElementById("rhObservacoes").value =
-c.observacoes_sistema || "";
-
-document.getElementById("mensagemSalvar").innerText =
-"";
-
-document.getElementById("modal").style.display =
-"block";
-
-}
-
+/* SALVAR SOMENTE GESTÃO HUMANA */
 
 async function salvarAvaliacao() {
 
-if(!candidatoAberto) return;
+  if(!candidatoAberto) {
 
-const botao =
-document.getElementById("botaoSalvar");
+    return;
 
-const mensagem =
-document.getElementById("mensagemSalvar");
+  }
 
-botao.disabled =
-true;
 
-botao.innerText =
-"SALVANDO...";
+  const botao =
+    document
+      .getElementById("botaoSalvar");
 
-mensagem.innerText =
-"";
 
-const alteracoes = {
+  const mensagem =
+    document
+      .getElementById("mensagemSalvar");
 
-status:
-document.getElementById("rhStatus").value,
 
-classificacao:
-document.getElementById("rhClassificacao").value || null,
+  botao.disabled =
+    true;
 
-alerta_profissional_aci:
-document.getElementById("rhAlertaProfissional").checked,
 
-alerta_comportamenta:
-document.getElementById("rhAlertaComportamental").checked,
+  botao.innerText =
+    "SALVANDO...";
 
-alerta_restricao_opera:
-document.getElementById("rhAlertaRestricao").checked,
 
-observacoes_sistema:
-document.getElementById("rhObservacoes").value.trim() || null
+  mensagem.innerText =
+    "";
 
-};
 
-const { data, error } =
-await supabaseClient
-.from("candidatos")
-.update(alteracoes)
-.eq("id", candidatoAberto.id)
-.select()
-.single();
+  const alteracoes = {
 
-botao.disabled =
-false;
+    status:
 
-botao.innerText =
-"SALVAR AVALIAÇÃO";
+      document
+        .getElementById("rhStatus")
+        .value,
 
-if(error) {
 
-console.error(error);
+    observacoes_sistema:
 
-mensagem.style.color =
-"#b00020";
+      document
+        .getElementById("rhObservacoes")
+        .value
+        .trim() || null
 
-mensagem.innerText =
-"Erro ao salvar: " + error.message;
+  };
 
-return;
+
+  const { data, error } =
+    await supabaseClient
+
+      .from("candidatos")
+
+      .update(alteracoes)
+
+      .eq(
+        "id",
+        candidatoAberto.id
+      )
+
+      .select()
+
+      .single();
+
+
+  botao.disabled =
+    false;
+
+
+  botao.innerText =
+    "SALVAR";
+
+
+  if(error) {
+
+    console.error(error);
+
+
+    mensagem.style.color =
+      "#b00020";
+
+
+    mensagem.innerText =
+      "Erro ao salvar: " +
+      error.message;
+
+
+    return;
+
+  }
+
+
+  candidatoAberto =
+    data;
+
+
+  const indice =
+    candidatos.findIndex(
+      c => c.id === data.id
+    );
+
+
+  if(indice !== -1) {
+
+    candidatos[indice] =
+      data;
+
+  }
+
+
+  mensagem.style.color =
+    "#15803d";
+
+
+  mensagem.innerText =
+    "Salvo com sucesso.";
+
+
+  filtrar();
 
 }
 
-candidatoAberto =
-data;
 
-const indice =
-candidatos.findIndex(
-c => c.id === data.id
-);
+/* UTILIDADES */
 
-if(indice !== -1) {
+function tituloCampo(campo) {
 
-candidatos[indice] =
-data;
+  return String(campo)
 
-}
+    .replaceAll("_"," ")
 
-mensagem.style.color =
-"#15803d";
-
-mensagem.innerText =
-"Salvo com sucesso.";
-
-filtrar();
+    .replace(
+      /\b\w/g,
+      letra =>
+        letra.toUpperCase()
+    );
 
 }
 
 
-function fecharFicha() {
+function formatarData(valor) {
 
-document.getElementById("modal").style.display =
-"none";
-
-candidatoAberto =
-null;
-
-}
+  const data =
+    new Date(valor);
 
 
-async function sair() {
+  if(
+    Number.isNaN(
+      data.getTime()
+    )
+  ) {
 
-await supabaseClient.auth.signOut();
+    return valor;
 
-location.reload();
+  }
+
+
+  return data.toLocaleString(
+    "pt-BR"
+  );
 
 }
 
 
 function esc(valor) {
 
-return String(valor ?? "")
+  return String(
+    valor ?? ""
+  )
 
-.replaceAll("&","&amp;")
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
 
-.replaceAll("<","&lt;")
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
 
-.replaceAll(">","&gt;")
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
 
-.replaceAll('"',"&quot;")
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
 
-.replaceAll("'","&#039;");
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
+
+/* FECHAR */
+
+function fecharFicha() {
+
+  document
+    .getElementById("modal")
+    .style.display =
+      "none";
+
+
+  candidatoAberto =
+    null;
+
+}
+
+
+/* LOGOUT */
+
+async function sair() {
+
+  await supabaseClient
+    .auth
+    .signOut();
+
+
+  location.reload();
+
+}
+
+
+/* SESSÃO */
 
 async function verificarLogin() {
 
-const { data } =
-await supabaseClient.auth.getSession();
+  const { data } =
+    await supabaseClient
+      .auth
+      .getSession();
 
-if(data.session) {
 
-abrirPainel();
+  if(data.session) {
 
-}
+    abrirPainel();
+
+  }
 
 }
 
