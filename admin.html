@@ -66,7 +66,7 @@ input, textarea {
 }
 
 textarea {
-  min-height: 100px;
+  min-height: 120px;
   resize: vertical;
 }
 
@@ -80,14 +80,23 @@ button {
   font-size: 14px;
 }
 
-button:hover { background: #333; }
+button:hover {
+  background: #333;
+}
+
+button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
 
 #erro {
   color: #b00020;
   margin-top: 15px;
 }
 
-#painel { display: none; }
+#painel {
+  display: none;
+}
 
 /* CONTROLES */
 
@@ -180,22 +189,44 @@ select {
 
 .status {
   display: inline-block;
-  margin-top: 12px;
+  margin-top: 14px;
   padding: 6px 10px;
   border-radius: 5px;
   font-size: 12px;
   font-weight: bold;
-  background: #e5e7eb;
 }
 
-.status-novo { background:#e5e7eb; }
-.status-triagem { background:#dbeafe; }
-.status-entrevistar { background:#fef3c7; }
-.status-teste { background:#ede9fe; }
-.status-aprovado { background:#dcfce7; }
-.status-contratado { background:#bbf7d0; }
-.status-banco { background:#e0f2fe; }
-.status-descartado { background:#fee2e2; }
+.status-novo {
+  background:#e5e7eb;
+}
+
+.status-triagem {
+  background:#dbeafe;
+}
+
+.status-entrevistar {
+  background:#fef3c7;
+}
+
+.status-teste {
+  background:#ede9fe;
+}
+
+.status-aprovado {
+  background:#dcfce7;
+}
+
+.status-contratado {
+  background:#bbf7d0;
+}
+
+.status-banco {
+  background:#e0f2fe;
+}
+
+.status-descartado {
+  background:#fee2e2;
+}
 
 /* MODAL */
 
@@ -217,7 +248,9 @@ select {
   padding: 30px;
 }
 
-.modal-box h2 { margin-top: 0; }
+.modal-box h2 {
+  margin-top: 0;
+}
 
 .linha {
   padding: 9px 0;
@@ -229,17 +262,30 @@ select {
   background: #777;
 }
 
-.sair { background: #777; }
+.sair {
+  background: #777;
+}
+
+/* RH */
 
 .bloco-rh {
   background: #f5f5f5;
   border-radius: 10px;
-  padding: 20px;
+  padding: 22px;
   margin-top: 25px;
+  border: 1px solid #e5e5e5;
 }
 
 .bloco-rh h3 {
   margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.subtitulo-rh {
+  color: #666;
+  font-size: 14px;
+  margin-top: 0;
+  margin-bottom: 20px;
 }
 
 .grid-rh {
@@ -258,7 +304,7 @@ select {
   display: grid;
   grid-template-columns: 1fr;
   gap: 10px;
-  margin: 15px 0;
+  margin: 20px 0;
 }
 
 .check-item {
@@ -267,7 +313,8 @@ select {
   gap: 10px;
   background: white;
   border-radius: 6px;
-  padding: 10px;
+  padding: 12px;
+  border: 1px solid #e5e5e5;
 }
 
 .check-item input {
@@ -277,7 +324,7 @@ select {
 
 .salvar {
   background: #15803d;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
 .salvar:hover {
@@ -285,11 +332,14 @@ select {
 }
 
 #mensagemSalvar {
-  margin-left: 10px;
+  margin-left: 12px;
   font-weight: bold;
 }
 
+/* MOBILE */
+
 @media(max-width:700px) {
+
   .barra {
     grid-template-columns: 1fr;
   }
@@ -324,6 +374,7 @@ select {
   <p>Painel interno de candidatos</p>
 </div>
 
+
 <!-- LOGIN -->
 
 <div id="login" class="card">
@@ -331,6 +382,7 @@ select {
   <h2>Acesso interno</h2>
 
   <label>E-mail</label>
+
   <input
     id="email"
     type="email"
@@ -338,17 +390,21 @@ select {
   >
 
   <label>Senha</label>
+
   <input
     id="senha"
     type="password"
     placeholder="Senha"
   >
 
-  <button onclick="entrar()">ENTRAR</button>
+  <button onclick="entrar()">
+    ENTRAR
+  </button>
 
   <div id="erro"></div>
 
 </div>
+
 
 <!-- PAINEL -->
 
@@ -356,7 +412,11 @@ select {
 
   <div class="card">
 
-    <button class="sair" onclick="sair()" style="float:right">
+    <button
+      class="sair"
+      onclick="sair()"
+      style="float:right"
+    >
       SAIR
     </button>
 
@@ -371,8 +431,15 @@ select {
         oninput="filtrar()"
       >
 
-      <select id="filtroArea" onchange="filtrar()">
-        <option value="">Todas as experiências</option>
+      <select
+        id="filtroArea"
+        onchange="filtrar()"
+      >
+
+        <option value="">
+          Todas as experiências
+        </option>
+
         <option>Marcenaria</option>
         <option>Serralheria</option>
         <option>Pintura</option>
@@ -383,10 +450,18 @@ select {
         <option>Tapeçaria</option>
         <option>Elétrica</option>
         <option>Obras</option>
+
       </select>
 
-      <select id="filtroStatus" onchange="filtrar()">
-        <option value="">Todos os status</option>
+      <select
+        id="filtroStatus"
+        onchange="filtrar()"
+      >
+
+        <option value="">
+          Todos os status
+        </option>
+
         <option value="novo">Novo</option>
         <option value="triagem">Triagem</option>
         <option value="entrevistar">Entrevistar</option>
@@ -395,6 +470,7 @@ select {
         <option value="contratado">Contratado</option>
         <option value="banco_talentos">Banco de talentos</option>
         <option value="descartado">Descartado</option>
+
       </select>
 
       <button onclick="carregarCandidatos()">
@@ -404,6 +480,7 @@ select {
     </div>
 
   </div>
+
 
   <div class="resumo">
 
@@ -419,9 +496,11 @@ select {
 
   </div>
 
+
   <div id="lista"></div>
 
 </div>
+
 
 <!-- FICHA COMPLETA -->
 
@@ -429,97 +508,177 @@ select {
 
   <div class="modal-box">
 
-    <button class="fechar" onclick="fecharFicha()">
+    <button
+      class="fechar"
+      onclick="fecharFicha()"
+    >
       FECHAR
     </button>
 
-    <h2 id="fichaNome">Candidato</h2>
+    <h2 id="fichaNome">
+      Candidato
+    </h2>
 
     <div id="ficha"></div>
+
+
+    <!-- AVALIAÇÃO INTERNA -->
 
     <div class="bloco-rh">
 
       <h3>Avaliação interna Adesul</h3>
 
+      <p class="subtitulo-rh">
+        Informações internas da seleção. Não fazem parte do cadastro preenchido pelo candidato.
+      </p>
+
+
       <div class="grid-rh">
 
         <div class="campo-rh">
+
           <label>Status do candidato</label>
+
           <select id="rhStatus">
-            <option value="novo">Novo</option>
-            <option value="triagem">Triagem</option>
-            <option value="entrevistar">Entrevistar</option>
-            <option value="teste_pratico">Teste prático</option>
-            <option value="aprovado">Aprovado</option>
-            <option value="contratado">Contratado</option>
-            <option value="banco_talentos">Banco de talentos</option>
-            <option value="descartado">Descartado</option>
+
+            <option value="novo">
+              Novo
+            </option>
+
+            <option value="triagem">
+              Triagem
+            </option>
+
+            <option value="entrevistar">
+              Entrevistar
+            </option>
+
+            <option value="teste_pratico">
+              Teste prático
+            </option>
+
+            <option value="aprovado">
+              Aprovado
+            </option>
+
+            <option value="contratado">
+              Contratado
+            </option>
+
+            <option value="banco_talentos">
+              Banco de talentos
+            </option>
+
+            <option value="descartado">
+              Descartado
+            </option>
+
           </select>
+
         </div>
 
+
         <div class="campo-rh">
+
           <label>Classificação</label>
+
           <select id="rhClassificacao">
-            <option value="">Não classificado</option>
-            <option value="A">A - Forte candidato</option>
-            <option value="B">B - Bom candidato</option>
-            <option value="C">C - Avaliar</option>
-            <option value="D">D - Baixa aderência</option>
-          </select>
-        </div>
 
-        <div class="campo-rh">
-          <label>Nota profissional</label>
-          <select id="rhProfissional">
-            <option value="">Sem avaliação</option>
-            <option value="1">1 - Muito baixa</option>
-            <option value="2">2 - Baixa</option>
-            <option value="3">3 - Regular</option>
-            <option value="4">4 - Boa</option>
-            <option value="5">5 - Muito boa</option>
-          </select>
-        </div>
+            <option value="">
+              Não classificado
+            </option>
 
-        <div class="campo-rh">
-          <label>Nota comportamental</label>
-          <select id="rhComportamental">
-            <option value="">Sem avaliação</option>
-            <option value="1">1 - Muito baixa</option>
-            <option value="2">2 - Baixa</option>
-            <option value="3">3 - Regular</option>
-            <option value="4">4 - Boa</option>
-            <option value="5">5 - Muito boa</option>
+            <option value="A">
+              A - Forte candidato
+            </option>
+
+            <option value="B">
+              B - Bom candidato
+            </option>
+
+            <option value="C">
+              C - Avaliar
+            </option>
+
+            <option value="D">
+              D - Baixa aderência
+            </option>
+
           </select>
+
         </div>
 
       </div>
+
 
       <div class="checks">
 
         <label class="check-item">
-          <input type="checkbox" id="rhAlertaProfissional">
-          Alerta profissional / técnico
+
+          <input
+            type="checkbox"
+            id="rhAlertaProfissional"
+          >
+
+          <span>
+            <strong>Alerta profissional / técnico</strong><br>
+            <small>
+              Algum ponto da experiência ou capacidade técnica merece atenção.
+            </small>
+          </span>
+
         </label>
 
-        <label class="check-item">
-          <input type="checkbox" id="rhAlertaComportamental">
-          Alerta comportamental
-        </label>
 
         <label class="check-item">
-          <input type="checkbox" id="rhAlertaRestricao">
-          Restrição operacional / disponibilidade
+
+          <input
+            type="checkbox"
+            id="rhAlertaComportamental"
+          >
+
+          <span>
+            <strong>Alerta comportamental</strong><br>
+            <small>
+              Algum ponto observado na entrevista merece atenção.
+            </small>
+          </span>
+
+        </label>
+
+
+        <label class="check-item">
+
+          <input
+            type="checkbox"
+            id="rhAlertaRestricao"
+          >
+
+          <span>
+            <strong>Restrição operacional / disponibilidade</strong><br>
+            <small>
+              Horários, viagens, finais de semana ou outra limitação operacional.
+            </small>
+          </span>
+
         </label>
 
       </div>
+
 
       <div class="campo-rh">
-        <label>Observações internas</label>
+
+        <label>
+          Observações internas
+        </label>
+
         <textarea
           id="rhObservacoes"
-          placeholder="Anotações da entrevista, impressões, pontos fortes, dúvidas, disponibilidade, pretensão, teste prático..."
+          placeholder="Anotações da entrevista, pontos fortes, dúvidas, pretensão salarial, disponibilidade, resultado do teste prático..."
         ></textarea>
+
       </div>
+
 
       <button
         id="botaoSalvar"
@@ -537,6 +696,7 @@ select {
 
 </div>
 
+
 <script>
 
 const SUPABASE_URL =
@@ -552,28 +712,44 @@ supabase.createClient(
 );
 
 let candidatos = [];
+
 let candidatoAberto = null;
+
 
 /* LOGIN */
 
 async function entrar() {
 
   const email =
-    document.getElementById("email").value.trim();
+    document
+      .getElementById("email")
+      .value
+      .trim();
 
   const senha =
-    document.getElementById("senha").value;
+    document
+      .getElementById("senha")
+      .value;
 
   const erro =
-    document.getElementById("erro");
+    document
+      .getElementById("erro");
 
-  erro.innerText = "Entrando...";
+  erro.innerText =
+    "Entrando...";
+
 
   const { error } =
-    await supabaseClient.auth.signInWithPassword({
-      email,
-      password: senha
-    });
+    await supabaseClient
+      .auth
+      .signInWithPassword({
+
+        email: email,
+
+        password: senha
+
+      });
+
 
   if(error) {
 
@@ -583,37 +759,54 @@ async function entrar() {
       "Não foi possível entrar. Verifique o e-mail e a senha.";
 
     return;
+
   }
+
 
   erro.innerText = "";
 
   abrirPainel();
+
 }
+
 
 /* ABRIR PAINEL */
 
 async function abrirPainel() {
 
-  document.getElementById("login").style.display =
-    "none";
+  document
+    .getElementById("login")
+    .style.display =
+      "none";
 
-  document.getElementById("painel").style.display =
-    "block";
+
+  document
+    .getElementById("painel")
+    .style.display =
+      "block";
+
 
   await carregarCandidatos();
+
 }
 
-/* CARREGAR BANCO */
+
+/* CARREGAR CANDIDATOS */
 
 async function carregarCandidatos() {
 
   const { data, error } =
     await supabaseClient
+
       .from("candidatos")
+
       .select("*")
-      .order("criado_em", {
-        ascending:false
-      });
+
+      .order(
+        "criado_em",
+        { ascending:false }
+      );
+
 
   if(error) {
 
@@ -624,116 +817,198 @@ async function carregarCandidatos() {
     );
 
     return;
+
   }
 
-  candidatos = data || [];
 
-  document.getElementById("total").innerText =
-    candidatos.length;
+  candidatos =
+    data || [];
+
+
+  document
+    .getElementById("total")
+    .innerText =
+      candidatos.length;
+
 
   filtrar();
+
 }
 
-/* FILTROS */
+
+/* FILTRAR */
 
 function filtrar() {
 
   const busca =
-    document.getElementById("busca")
+    document
+      .getElementById("busca")
       .value
       .toLowerCase();
+
 
   const area =
-    document.getElementById("filtroArea")
+    document
+      .getElementById("filtroArea")
       .value
       .toLowerCase();
 
+
   const status =
-    document.getElementById("filtroStatus")
+    document
+      .getElementById("filtroStatus")
       .value;
+
 
   const filtrados =
     candidatos.filter(c => {
 
+
       const texto =
-        JSON.stringify(c).toLowerCase();
+        JSON.stringify(c)
+          .toLowerCase();
+
 
       const bateBusca =
         !busca ||
         texto.includes(busca);
 
+
       const experiencias =
         Array.isArray(c.areas_experiencia)
+
           ? c.areas_experiencia.join(" ")
+
           : (c.areas_experiencia || "");
+
 
       const bateArea =
         !area ||
+
         experiencias
           .toLowerCase()
           .includes(area);
 
+
       const statusCandidato =
         c.status || "novo";
+
 
       const bateStatus =
         !status ||
         statusCandidato === status;
 
-      return bateBusca &&
-             bateArea &&
-             bateStatus;
+
+      return (
+        bateBusca &&
+        bateArea &&
+        bateStatus
+      );
 
     });
 
-  document.getElementById("exibidos").innerText =
-    filtrados.length;
+
+  document
+    .getElementById("exibidos")
+    .innerText =
+      filtrados.length;
+
 
   desenhar(filtrados);
+
 }
 
-/* STATUS */
+
+/* NOMES DOS STATUS */
 
 function nomeStatus(status) {
 
   const nomes = {
-    novo: "Novo",
-    triagem: "Triagem",
-    entrevistar: "Entrevistar",
-    teste_pratico: "Teste prático",
-    aprovado: "Aprovado",
-    contratado: "Contratado",
-    banco_talentos: "Banco de talentos",
-    descartado: "Descartado"
+
+    novo:
+      "Novo",
+
+    triagem:
+      "Triagem",
+
+    entrevistar:
+      "Entrevistar",
+
+    teste_pratico:
+      "Teste prático",
+
+    aprovado:
+      "Aprovado",
+
+    contratado:
+      "Contratado",
+
+    banco_talentos:
+      "Banco de talentos",
+
+    descartado:
+      "Descartado"
+
   };
 
+
   return nomes[status] || "Novo";
+
 }
+
+
+/* COR DO STATUS */
 
 function classeStatus(status) {
 
   const classes = {
-    novo: "status-novo",
-    triagem: "status-triagem",
-    entrevistar: "status-entrevistar",
-    teste_pratico: "status-teste",
-    aprovado: "status-aprovado",
-    contratado: "status-contratado",
-    banco_talentos: "status-banco",
-    descartado: "status-descartado"
+
+    novo:
+      "status-novo",
+
+    triagem:
+      "status-triagem",
+
+    entrevistar:
+      "status-entrevistar",
+
+    teste_pratico:
+      "status-teste",
+
+    aprovado:
+      "status-aprovado",
+
+    contratado:
+      "status-contratado",
+
+    banco_talentos:
+      "status-banco",
+
+    descartado:
+      "status-descartado"
+
   };
 
-  return classes[status] || "status-novo";
+
+  return (
+    classes[status] ||
+    "status-novo"
+  );
+
 }
+
 
 /* DESENHAR CARDS */
 
 function desenhar(lista) {
 
   const div =
-    document.getElementById("lista");
+    document
+      .getElementById("lista");
+
 
   div.innerHTML = "";
+
 
   if(lista.length === 0) {
 
@@ -741,92 +1016,168 @@ function desenhar(lista) {
       "<div class='card'>Nenhum candidato encontrado.</div>";
 
     return;
+
   }
+
 
   lista.forEach(c => {
 
-    const card =
-      document.createElement("div");
 
-    card.className = "candidato";
+    const card =
+      document
+        .createElement("div");
+
+
+    card.className =
+      "candidato";
+
 
     const experiencias =
       Array.isArray(c.areas_experiencia)
+
         ? c.areas_experiencia
+
         : [];
+
 
     let tags = "";
 
+
     experiencias.forEach(a => {
+
       tags +=
         `<span class="tag">${esc(a)}</span>`;
+
     });
+
 
     const statusAtual =
       c.status || "novo";
 
+
     const classificacao =
       c.classificacao
+
         ? ` · Classe ${esc(c.classificacao)}`
+
         : "";
 
+
     card.innerHTML = `
-      <h3>${esc(c.nome_completo || "Sem nome")}</h3>
+
+      <h3>
+        ${esc(
+          c.nome_completo ||
+          "Sem nome"
+        )}
+      </h3>
+
 
       <p>
+
         <strong>Idade:</strong>
-        ${esc(c.idade ?? "-")}
+
+        ${esc(
+          c.idade ?? "-"
+        )}
+
       </p>
 
+
       <p>
+
         <strong>Local:</strong>
-        ${esc(c.bairro || "-")}
-        ${c.cidade ? " - " + esc(c.cidade) : ""}
+
+        ${esc(
+          c.bairro || "-"
+        )}
+
+        ${
+          c.cidade
+            ? " - " + esc(c.cidade)
+            : ""
+        }
+
       </p>
 
+
       <p>
+
         <strong>Experiência:</strong>
-        ${esc(c.tempo_experiencia || "-")}
+
+        ${esc(
+          c.tempo_experiencia ||
+          "-"
+        )}
+
       </p>
+
 
       <div class="tags">
+
         ${tags}
+
       </div>
 
-      <span class="status ${classeStatus(statusAtual)}">
-        ${esc(nomeStatus(statusAtual))}${classificacao}
+
+      <span
+        class="status ${classeStatus(statusAtual)}"
+      >
+
+        ${esc(nomeStatus(statusAtual))}
+        ${classificacao}
+
       </span>
+
     `;
+
 
     card.onclick =
       () => abrirFicha(c);
 
+
     div.appendChild(card);
 
   });
+
 }
 
-/* FICHA */
+
+/* ABRIR FICHA */
 
 function abrirFicha(c) {
 
   candidatoAberto = c;
 
-  document.getElementById("fichaNome")
+
+  document
+    .getElementById("fichaNome")
     .innerText =
-      c.nome_completo || "Candidato";
+      c.nome_completo ||
+      "Candidato";
+
 
   const ficha =
-    document.getElementById("ficha");
+    document
+      .getElementById("ficha");
+
 
   ficha.innerHTML = "";
 
+
   const nomes = {
 
-    idade:"Idade",
-    bairro:"Bairro",
-    cidade:"Cidade",
-    telefone:"WhatsApp / Telefone",
+    idade:
+      "Idade",
+
+    bairro:
+      "Bairro",
+
+    cidade:
+      "Cidade",
+
+    telefone:
+      "WhatsApp / Telefone",
 
     tempo_experiencia:
       "Tempo de experiência",
@@ -851,213 +1202,386 @@ function abrirFicha(c) {
 
   };
 
+
   const camposInternos = [
+
     "status",
+
     "classificacao",
-    "avaliacao_profissional",
-    "avaliacao_comportamental",
+
     "alerta_profissional_aci",
+
     "alerta_comportamenta",
+
     "alerta_restricao_opera",
+
     "observacoes_sistema"
+
   ];
 
-  Object.keys(c).forEach(campo => {
 
-    if(
-      campo === "id" ||
-      campo === "nome_completo" ||
-      camposInternos.includes(campo)
-    ) return;
+  Object
+    .keys(c)
+    .forEach(campo => {
 
-    let valor = c[campo];
 
-    if(
-      valor === null ||
-      valor === undefined ||
-      valor === ""
-    ) return;
+      if(
 
-    if(Array.isArray(valor))
-      valor = valor.join(", ");
+        campo === "id" ||
 
-    if(typeof valor === "boolean")
-      valor = valor ? "Sim" : "Não";
+        campo === "nome_completo" ||
 
-    const linha =
-      document.createElement("div");
+        camposInternos.includes(campo)
 
-    linha.className = "linha";
+      ) return;
 
-    linha.innerHTML =
-      `<strong>${esc(nomes[campo] || campo)}:</strong>
-       ${esc(valor)}`;
 
-    ficha.appendChild(linha);
+      let valor =
+        c[campo];
 
-  });
 
-  /* CARREGAR AVALIAÇÃO INTERNA */
+      if(
 
-  document.getElementById("rhStatus").value =
-    c.status || "novo";
+        valor === null ||
 
-  document.getElementById("rhClassificacao").value =
-    c.classificacao || "";
+        valor === undefined ||
 
-  document.getElementById("rhProfissional").value =
-    c.avaliacao_profissional ?? "";
+        valor === ""
 
-  document.getElementById("rhComportamental").value =
-    c.avaliacao_comportamental ?? "";
+      ) return;
 
-  document.getElementById("rhAlertaProfissional").checked =
-    !!c.alerta_profissional_aci;
 
-  document.getElementById("rhAlertaComportamental").checked =
-    !!c.alerta_comportamenta;
+      if(Array.isArray(valor)) {
 
-  document.getElementById("rhAlertaRestricao").checked =
-    !!c.alerta_restricao_opera;
+        valor =
+          valor.join(", ");
 
-  document.getElementById("rhObservacoes").value =
-    c.observacoes_sistema || "";
+      }
 
-  document.getElementById("mensagemSalvar")
-    .innerText = "";
 
-  document.getElementById("modal")
-    .style.display = "block";
+      if(typeof valor === "boolean") {
+
+        valor =
+          valor
+            ? "Sim"
+            : "Não";
+
+      }
+
+
+      const linha =
+        document
+          .createElement("div");
+
+
+      linha.className =
+        "linha";
+
+
+      linha.innerHTML =
+
+        `<strong>
+          ${esc(
+            nomes[campo] ||
+            campo
+          )}:
+        </strong>
+
+        ${esc(valor)}`;
+
+
+      ficha.appendChild(linha);
+
+    });
+
+
+  /* DADOS INTERNOS */
+
+
+  document
+    .getElementById("rhStatus")
+    .value =
+      c.status || "novo";
+
+
+  document
+    .getElementById("rhClassificacao")
+    .value =
+      c.classificacao || "";
+
+
+  document
+    .getElementById("rhAlertaProfissional")
+    .checked =
+      !!c.alerta_profissional_aci;
+
+
+  document
+    .getElementById("rhAlertaComportamental")
+    .checked =
+      !!c.alerta_comportamenta;
+
+
+  document
+    .getElementById("rhAlertaRestricao")
+    .checked =
+      !!c.alerta_restricao_opera;
+
+
+  document
+    .getElementById("rhObservacoes")
+    .value =
+      c.observacoes_sistema || "";
+
+
+  const mensagem =
+    document
+      .getElementById("mensagemSalvar");
+
+
+  mensagem.innerText = "";
+
+
+  document
+    .getElementById("modal")
+    .style.display =
+      "block";
+
 }
+
 
 /* SALVAR AVALIAÇÃO */
 
 async function salvarAvaliacao() {
 
-  if(!candidatoAberto) return;
+  if(!candidatoAberto) {
+
+    return;
+
+  }
+
 
   const botao =
-    document.getElementById("botaoSalvar");
+    document
+      .getElementById("botaoSalvar");
+
 
   const mensagem =
-    document.getElementById("mensagemSalvar");
+    document
+      .getElementById("mensagemSalvar");
+
 
   botao.disabled = true;
-  botao.innerText = "SALVANDO...";
+
+  botao.innerText =
+    "SALVANDO...";
+
+
   mensagem.innerText = "";
 
-  const profissional =
-    document.getElementById("rhProfissional").value;
-
-  const comportamental =
-    document.getElementById("rhComportamental").value;
 
   const alteracoes = {
 
+
     status:
-      document.getElementById("rhStatus").value,
+
+      document
+        .getElementById("rhStatus")
+        .value,
+
 
     classificacao:
-      document.getElementById("rhClassificacao").value || null,
 
-    avaliacao_profissional:
-      profissional ? Number(profissional) : null,
+      document
+        .getElementById("rhClassificacao")
+        .value || null,
 
-    avaliacao_comportamental:
-      comportamental ? Number(comportamental) : null,
 
     alerta_profissional_aci:
-      document.getElementById("rhAlertaProfissional").checked,
+
+      document
+        .getElementById("rhAlertaProfissional")
+        .checked,
+
 
     alerta_comportamenta:
-      document.getElementById("rhAlertaComportamental").checked,
+
+      document
+        .getElementById("rhAlertaComportamental")
+        .checked,
+
 
     alerta_restricao_opera:
-      document.getElementById("rhAlertaRestricao").checked,
+
+      document
+        .getElementById("rhAlertaRestricao")
+        .checked,
+
 
     observacoes_sistema:
-      document.getElementById("rhObservacoes").value.trim() || null
+
+      document
+        .getElementById("rhObservacoes")
+        .value
+        .trim() || null
 
   };
 
+
   const { data, error } =
     await supabaseClient
+
       .from("candidatos")
+
       .update(alteracoes)
-      .eq("id", candidatoAberto.id)
+
+      .eq(
+        "id",
+        candidatoAberto.id
+      )
+
       .select()
+
       .single();
 
+
   botao.disabled = false;
-  botao.innerText = "SALVAR AVALIAÇÃO";
+
+  botao.innerText =
+    "SALVAR AVALIAÇÃO";
+
 
   if(error) {
 
     console.error(error);
 
-    mensagem.style.color = "#b00020";
-    mensagem.innerText = "Erro ao salvar.";
+    mensagem.style.color =
+      "#b00020";
+
+    mensagem.innerText =
+      "Erro ao salvar: " +
+      error.message;
 
     return;
+
   }
 
-  candidatoAberto = data;
+
+  candidatoAberto =
+    data;
+
 
   const indice =
     candidatos.findIndex(
       c => c.id === data.id
     );
 
-  if(indice !== -1)
-    candidatos[indice] = data;
 
-  mensagem.style.color = "#15803d";
-  mensagem.innerText = "Salvo com sucesso.";
+  if(indice !== -1) {
+
+    candidatos[indice] =
+      data;
+
+  }
+
+
+  mensagem.style.color =
+    "#15803d";
+
+
+  mensagem.innerText =
+    "Salvo com sucesso.";
+
 
   filtrar();
+
 }
 
-/* FECHAR */
+
+/* FECHAR FICHA */
 
 function fecharFicha() {
 
-  document.getElementById("modal")
-    .style.display = "none";
+  document
+    .getElementById("modal")
+    .style.display =
+      "none";
 
-  candidatoAberto = null;
+
+  candidatoAberto =
+    null;
+
 }
+
 
 /* LOGOUT */
 
 async function sair() {
 
-  await supabaseClient.auth.signOut();
+  await supabaseClient
+    .auth
+    .signOut();
+
 
   location.reload();
+
 }
+
 
 /* SEGURANÇA DE TEXTO */
 
 function esc(valor) {
 
-  return String(valor ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+  return String(
+    valor ?? ""
+  )
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
 }
+
 
 /* VERIFICAR SESSÃO */
 
 async function verificarLogin() {
 
   const { data } =
-    await supabaseClient.auth.getSession();
+    await supabaseClient
+      .auth
+      .getSession();
 
-  if(data.session)
+
+  if(data.session) {
+
     abrirPainel();
+
+  }
+
 }
+
 
 verificarLogin();
 
