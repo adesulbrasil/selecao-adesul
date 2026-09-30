@@ -497,9 +497,12 @@ function mostrarMensagem(texto,sucesso){
 function montarPayload(){
   const pontuacaoTecnica = calcularPontuacaoTecnica();
   const pontuacaoComportamental = calcularComportamental();
+  const afinidade = calcularAfinidade();
+  const alertas = calcularAlertas(pontuacaoTecnica,pontuacaoComportamental);
+  const classificacao = calcularClassificacao(pontuacaoTecnica,pontuacaoComportamental,afinidade,alertas);
 
   const validacoesTecnicas = {
-    versao_formulario: "2026-09-30-contrato-aprovado-v2",
+    versao_formulario: "2026-09-30-final-v3",
     regra_tecnica: "3 melhores niveis: melhor x3 + segunda x2 + terceira x1",
     faixa_tecnica: faixaTecnica(pontuacaoTecnica),
     faixa_comportamental: faixaComportamental(pontuacaoComportamental),
@@ -564,11 +567,11 @@ function montarPayload(){
     autoriza_dados_selecao: document.getElementById("autoriza_dados_selecao").checked,
     pontuacao_tecnica: pontuacaoTecnica,
     pontuacao_comportamental: pontuacaoComportamental,
-    afinidade_profissional: null,
-    classificacao: null,
-    alerta_profissional_acima_vaga: false,
-    alerta_comportamental: false,
-    alerta_restricao_operacional: false,
+    afinidade_profissional: afinidade,
+    classificacao: classificacao,
+    alerta_profissional_acima_vaga: alertas.alerta_profissional_acima_vaga,
+    alerta_comportamental: alertas.alerta_comportamental,
+    alerta_restricao_operacional: alertas.alerta_restricao_operacional,
     status: "novo",
     validacoes_tecnicas: validacoesTecnicas
   };
