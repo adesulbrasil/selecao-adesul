@@ -511,7 +511,10 @@ function montarPayload(){
     regra_tecnica: "3 melhores niveis: melhor x3 + segunda x2 + terceira x1",
     faixa_tecnica: faixaTecnica(pontuacaoTecnica),
     faixa_comportamental: faixaComportamental(pontuacaoComportamental),
-    niveis: Object.fromEntries(habilidades.map(([campo]) => [campo, Number(document.getElementById(campo).value || 0)]))
+    niveis: Object.fromEntries(habilidades.map(([campo]) => {
+      const el = document.querySelector('input[name="'+campo+'"]:checked');
+      return [campo, el ? Number(el.value) : 0];
+    }))
   };
 
   const dados = {
@@ -578,7 +581,10 @@ function montarPayload(){
     validacoes_tecnicas: validacoesTecnicas
   };
 
-  habilidades.forEach(([campo])=>{ dados[campo] = Number(document.getElementById(campo).value || 0); });
+  habilidades.forEach(([campo])=>{
+    const el = document.querySelector('input[name="'+campo+'"]:checked');
+    dados[campo] = el ? Number(el.value) : 0;
+  });
   return dados;
 }
 
@@ -655,7 +661,10 @@ document.getElementById("formCandidato").addEventListener("submit",async event=>
     document.getElementById("dadosReferencia").classList.add("oculto");
     document.getElementById("disponibilidadeExtra").style.opacity = "1";
     document.querySelectorAll("#disponibilidadeExtra input").forEach(i=>i.disabled=false);
-    habilidades.forEach(([campo])=>document.getElementById(campo).value="0");
+    habilidades.forEach(([campo])=>{
+    const el = document.querySelector('input[name="'+campo+'"][value="0"]');
+    if(el) el.checked = true;
+  });
     atualizarResumoTecnico();
     const confirmacao = document.getElementById("mensagem");
     confirmacao.style.fontWeight = "bold";
