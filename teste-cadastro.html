@@ -333,7 +333,17 @@ textarea{min-height:95px;resize:vertical}
 <script>
 const SUPABASE_URL = "https://hetkropzbpsybgbavwfd.supabase.co";
 const SUPABASE_KEY = "sb_publishable_rhrhtkOhmIX8DpFlQFvEEg_IdaTVtgu";
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY,
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false
+    }
+  }
+);
 
 const habilidades = [
   ["nivel_marcenaria","Marcenaria"],
