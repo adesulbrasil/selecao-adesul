@@ -502,12 +502,9 @@ function mostrarMensagem(texto,sucesso){
 function montarPayload(){
   const pontuacaoTecnica = calcularPontuacaoTecnica();
   const pontuacaoComportamental = calcularComportamental();
-  const afinidade = calcularAfinidade();
-  const alertas = calcularAlertas(pontuacaoComportamental);
-  const classificacao = calcularClassificacao(pontuacaoTecnica,pontuacaoComportamental,afinidade,alertas);
 
   const validacoesTecnicas = {
-    versao_formulario: "2026-09-29-v1",
+    versao_formulario: "2026-09-30-contrato-aprovado-v2",
     regra_tecnica: "3 melhores niveis: melhor x3 + segunda x2 + terceira x1",
     faixa_tecnica: faixaTecnica(pontuacaoTecnica),
     faixa_comportamental: faixaComportamental(pontuacaoComportamental),
@@ -572,11 +569,11 @@ function montarPayload(){
     autoriza_dados_selecao: document.getElementById("autoriza_dados_selecao").checked,
     pontuacao_tecnica: pontuacaoTecnica,
     pontuacao_comportamental: pontuacaoComportamental,
-    afinidade_profissional: afinidade,
-    classificacao: classificacao,
-    alerta_profissional_acima_vaga: alertas.alerta_profissional_acima_vaga,
-    alerta_comportamental: alertas.alerta_comportamental,
-    alerta_restricao_operacional: alertas.alerta_restricao_operacional,
+    afinidade_profissional: null,
+    classificacao: null,
+    alerta_profissional_acima_vaga: false,
+    alerta_comportamental: false,
+    alerta_restricao_operacional: false,
     status: "novo",
     validacoes_tecnicas: validacoesTecnicas
   };
@@ -604,40 +601,6 @@ document.querySelectorAll('input[name="possui_referencia"]').forEach(el=>{
   });
 });
 
-function colunaAusenteDaMensagem(mensagem){
-  const texto = String(mensagem || "");
-  const padroes = [
-    /Could not find the '([^']+)' column/i,
-    /column "([^"]+)" of relation "candidatos" does not exist/i,
-    /column ([a-zA-Z0-9_]+) does not exist/i
-  ];
-  for(const padrao of padroes){
-    const achou = texto.match(padrao);
-    if(achou) return achou[1];
-  }
-  return null;
-}
-
-async function inserirComCompatibilidade(dadosOriginais){
-  const dados = structuredClone(dadosOriginais);
-  const removidos = {};
-  for(let tentativa=0; tentativa<40; tentativa++){
-    if(dados.validacoes_tecnicas && Object.keys(removidos).length){
-      dados.validacoes_tecnicas.campos_nao_mapeados = removidos;
-    }
-    const { error } = await supabaseClient.from("candidatos").insert([dados]);
-    if(!error){ return { error:null, removidos }; }
-    const coluna = colunaAusenteDaMensagem(error.message);
-    if(coluna && Object.prototype.hasOwnProperty.call(dados,coluna)){
-      removidos[coluna] = dados[coluna];
-      delete dados[coluna];
-      continue;
-    }
-    return { error, removidos };
-  }
-  return { error:{message:"O formulário encontrou incompatibilidades demais com a estrutura do banco."}, removidos };
-}
-
 document.getElementById("formCandidato").addEventListener("submit",async event=>{
   event.preventDefault();
   if(!validarFormulario()) return;
@@ -649,12 +612,8 @@ document.getElementById("formCandidato").addEventListener("submit",async event=>
 
   try{
     const dados = montarPayload();
-    const { error, removidos } = await inserirComCompatibilidade(dados);
+    const { error } = await supabaseClient.from("candidatos").insert([dados]);
     if(error) throw error;
-
-    if(Object.keys(removidos).length){
-      console.warn("Campos preservados no bloco de compatibilidade:", removidos);
-    }
 
     mostrarMensagem("✅ Cadastro enviado com sucesso!\n\nObrigado pelo interesse em trabalhar conosco. A Adesul recebeu suas informações para análise.", true);
     event.target.reset();
