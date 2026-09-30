@@ -472,7 +472,47 @@ button:disabled{
     ENTRAR
   </button>
 
+  <button
+    type="button"
+    onclick="esqueciSenha()"
+    style="background:#fff;color:#111;border:1px solid #ccc;margin-top:10px"
+  >
+    ESQUECI MINHA SENHA
+  </button>
+
   <div id="erro"></div>
+
+</div>
+
+<div id="recuperacao" class="card" style="display:none">
+
+  <h2>Definir nova senha</h2>
+
+  <p>Digite uma nova senha para sua conta.</p>
+
+  <label>Nova senha</label>
+
+  <input
+    id="novaSenha"
+    type="password"
+    placeholder="Nova senha"
+    minlength="8"
+  >
+
+  <label>Confirmar nova senha</label>
+
+  <input
+    id="confirmarNovaSenha"
+    type="password"
+    placeholder="Repita a nova senha"
+    minlength="8"
+  >
+
+  <button onclick="salvarNovaSenha()">
+    SALVAR NOVA SENHA
+  </button>
+
+  <div id="erroRecuperacao"></div>
 
 </div>
 
@@ -899,6 +939,108 @@ async function entrar() {
 
   abrirPainel();
 
+}
+
+
+async function esqueciSenha() {
+
+  const email =
+    document
+      .getElementById("email")
+      .value
+      .trim();
+
+  const erro =
+    document
+      .getElementById("erro");
+
+  if(!email) {
+    erro.innerText =
+      "Digite seu e-mail acima para receber o link de recuperação.";
+    return;
+  }
+
+  erro.innerText =
+    "Enviando link de recuperação...";
+
+  const { error } =
+    await supabaseClient
+      .auth
+      .resetPasswordForEmail(
+        email,
+        {
+          redirectTo:
+            "https://adesulbrasil.github.io/selecao-adesul/admin.html"
+        }
+      );
+
+  if(error) {
+    console.error(error);
+    erro.innerText =
+      "Não foi possível enviar o e-mail agora. Tente novamente em alguns minutos.";
+    return;
+  }
+
+  erro.innerText =
+    "Link enviado. Verifique sua caixa de entrada e também o spam.";
+}
+
+
+async function salvarNovaSenha() {
+
+  const senha =
+    document
+      .getElementById("novaSenha")
+      .value;
+
+  const confirmar =
+    document
+      .getElementById("confirmarNovaSenha")
+      .value;
+
+  const erro =
+    document
+      .getElementById("erroRecuperacao");
+
+  if(senha.length < 8) {
+    erro.innerText =
+      "A nova senha deve ter pelo menos 8 caracteres.";
+    return;
+  }
+
+  if(senha !== confirmar) {
+    erro.innerText =
+      "As duas senhas não são iguais.";
+    return;
+  }
+
+  erro.innerText =
+    "Salvando nova senha...";
+
+  const { error } =
+    await supabaseClient
+      .auth
+      .updateUser({
+        password:senha
+      });
+
+  if(error) {
+    console.error(error);
+    erro.innerText =
+      "Não foi possível alterar a senha. Abra novamente o link recebido por e-mail.";
+    return;
+  }
+
+  erro.innerText =
+    "Senha alterada com sucesso. Voltando ao login...";
+
+  await supabaseClient.auth.signOut();
+
+  setTimeout(()=>{
+    window.location.replace(
+      "https://adesulbrasil.github.io/selecao-adesul/admin.html"
+    );
+  },1200);
 }
 
 
@@ -2157,6 +2299,33 @@ async function sair() {
 
 async function verificarLogin() {
 
+  const url =
+    window.location.href;
+
+  const recuperando =
+    url.includes("type=recovery");
+
+  if(recuperando) {
+
+    document
+      .getElementById("login")
+      .style.display =
+        "none";
+
+    document
+      .getElementById("painel")
+      .style.display =
+        "none";
+
+    document
+      .getElementById("recuperacao")
+      .style.display =
+        "block";
+
+    return;
+
+  }
+
   const { data } =
     await supabaseClient
       .auth
@@ -2170,6 +2339,32 @@ async function verificarLogin() {
   }
 
 }
+
+
+supabaseClient
+  .auth
+  .onAuthStateChange((evento)=>{
+
+    if(evento === "PASSWORD_RECOVERY") {
+
+      document
+        .getElementById("login")
+        .style.display =
+          "none";
+
+      document
+        .getElementById("painel")
+        .style.display =
+          "none";
+
+      document
+        .getElementById("recuperacao")
+        .style.display =
+          "block";
+
+    }
+
+  });
 
 
 verificarLogin();
