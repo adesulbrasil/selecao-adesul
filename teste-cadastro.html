@@ -639,11 +639,12 @@ document.getElementById("formCandidato").addEventListener("submit",async event=>
     confirmacao.scrollIntoView({behavior:"smooth", block:"center"});
   }catch(error){
     console.error(error);
-    mostrarMensagem("Não foi possível enviar o cadastro.
-
-Detalhe técnico: "+(error.message || "erro desconhecido")+"
-
-Se o problema continuar, informe esta mensagem à Adesul.", false);
+    mostrarMensagem(
+      "Não foi possível enviar o cadastro.\n\nDetalhe técnico: " +
+      (error.message || "erro desconhecido") +
+      "\n\nSe o problema continuar, informe esta mensagem à Adesul.",
+      false
+    );
   }finally{
     botao.disabled = false;
     botao.textContent = "ENVIAR CADASTRO";
