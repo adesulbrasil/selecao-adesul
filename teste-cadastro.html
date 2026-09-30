@@ -446,38 +446,33 @@ function normalizarTexto(texto){
 function calcularAfinidade(){
   const areas = selecionados("areasInteresse");
   const outro = normalizarTexto(valor("outro_interesse_profissional"));
-  const foraDoPerfil = ["motorista","conferente","logistica","almoxarife","almoxarifado","manobrista","administrativo","recepcao","vendas","vendedor"].some(termo => outro.includes(termo));
-  if(areas.length >= 2 && !foraDoPerfil) return "Alta";
+  const externos = ["motorista","conferente","logistica","almoxarife","almoxarifado","manobrista","administrativo","administracao","recepcao","vendas","vendedor","porteiro","seguranca"];
+  const fora = externos.some(t => outro.includes(t));
+  if(areas.length >= 2 && !fora) return "Alta";
   if(areas.length >= 1) return "Média";
-  return "Baixa";
+  if(fora) return "Baixa";
+  return "Média";
 }
-function calcularAlertas(pontuacaoComportamental){
-  const niveis = niveisTecnicos();
-  const dominaVarias = niveis.filter(n=>n===4).length >= 3;
-  const erroOcultado = scoreSelect("comportamento_erro") === 0;
-  const alertaComportamental = pontuacaoComportamental <= 6 || erroOcultado;
-  const somenteNormal = radioBoolean("somente_horario_normal") === true;
-  const chega8h = radioBoolean("consegue_chegar_8h");
-  const aceita = valor("aceita_condicoes");
-  const limitacao = valor("limitacao_disponibilidade");
-  const alertaOperacional = somenteNormal || chega8h === false || aceita === "Não" || limitacao.length > 0;
+function calcularAlertas(tecnica,comportamental){
+  const dominios = niveisTecnicos().filter(n=>n===4).length;
+  const experiencia = valor("tempo_experiencia");
+  const alertaProfissional = tecnica >= 20 && (dominios >= 2 || experiencia === "Mais de 10 anos");
+  const alertaComportamental = comportamental <= 6 || scoreSelect("comportamento_erro") === 0;
+  const alertaOperacional = radioBoolean("somente_horario_normal") === true || radioBoolean("consegue_chegar_8h") === false || valor("aceita_condicoes") === "Não";
   return {
-    alerta_profissional_acima_vaga: dominaVarias,
+    alerta_profissional_acima_vaga: alertaProfissional,
     alerta_comportamental: alertaComportamental,
     alerta_restricao_operacional: alertaOperacional
   };
 }
-function calcularClassificacao(tecnica, comportamental, afinidade, alertas){
-  const aceita = valor("aceita_condicoes");
-  const chega8h = radioBoolean("consegue_chegar_8h");
-  const possuiSolo = niveisTecnicos().some(n=>n>=3);
-  if(aceita==="Não" || chega8h===false) return "Não aderente";
-  if(tecnica===0 && afinidade==="Baixa") return "Não aderente";
+function calcularClassificacao(tecnica,comportamental,afinidade,alertas){
+  if(valor("aceita_condicoes") === "Não" || radioBoolean("consegue_chegar_8h") === false) return "Não aderente";
   if(alertas.alerta_comportamental || alertas.alerta_restricao_operacional) return "Analisar";
-  if(tecnica>=8 && possuiSolo && comportamental>=7 && afinidade!=="Baixa") return "Prioridade";
-  if(tecnica>=1 && tecnica<=14 && comportamental>=7 && afinidade==="Alta") return "Auxiliar / Potencial";
+  if(tecnica >= 15 && comportamental >= 7 && afinidade !== "Baixa") return "Prioridade";
+  if(tecnica < 15 && comportamental >= 7 && afinidade !== "Baixa") return "Auxiliar / Potencial";
   return "Analisar";
 }
+
 function validarFormulario(){
   const form = document.getElementById("formCandidato");
   if(!form.checkValidity()){ form.reportValidity(); return false; }
