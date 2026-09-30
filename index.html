@@ -1,271 +1,647 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trabalhe Conosco | Adesul</title>
-
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f5f7;
-      color: #222;
-    }
-
-    .topo {
-      background: #111;
-      color: white;
-      padding: 28px 20px;
-      text-align: center;
-    }
-
-    .topo h1 {
-      margin: 0;
-      font-size: 30px;
-    }
-
-    .topo p {
-      margin: 8px 0 0;
-      color: #ccc;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 30px auto;
-      background: white;
-      padding: 32px;
-      border-radius: 12px;
-      box-shadow: 0 3px 15px rgba(0,0,0,.08);
-    }
-
-    h2 {
-      margin-top: 30px;
-      border-bottom: 2px solid #eee;
-      padding-bottom: 8px;
-    }
-
-    label {
-      display: block;
-      margin-top: 16px;
-      font-weight: bold;
-    }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 12px;
-      margin-top: 6px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
-    }
-
-    textarea {
-      min-height: 100px;
-    }
-
-    .checks label {
-      font-weight: normal;
-      margin: 9px 0;
-    }
-
-    .checks input {
-      width: auto;
-      margin-right: 8px;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 30px;
-      padding: 16px;
-      background: #111;
-      color: white;
-      border: 0;
-      border-radius: 7px;
-      font-size: 17px;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: .6;
-      cursor: wait;
-    }
-
-    #mensagem {
-      margin-top: 20px;
-      padding: 12px;
-      display: none;
-      border-radius: 6px;
-    }
-  </style>
-</head>
-
-<body>
-
-<div class="topo">
-  <h1>ADESUL</h1>
-  <p>Cadastro de candidatos</p>
-</div>
-
-<div class="container">
-
-<form id="formCandidato">
-
-  <h2>Seus dados</h2>
-
-  <label>Nome completo *</label>
-  <input id="nome" required>
-
-  <label>Idade *</label>
-  <input id="idade" type="number" min="16" max="80" required>
-
-  <label>Bairro *</label>
-  <input id="bairro" required>
-
-  <label>Cidade *</label>
-  <input id="cidade" required>
-
-  <label>Telefone / WhatsApp *</label>
-  <input id="telefone" required>
-
-  <h2>Experiência profissional</h2>
-
-  <label>Quanto tempo de experiência profissional você possui?</label>
-  <select id="tempo_experiencia">
-    <option value="">Selecione</option>
-    <option>Sem experiência</option>
-    <option>Menos de 1 ano</option>
-    <option>1 a 3 anos</option>
-    <option>3 a 5 anos</option>
-    <option>Mais de 5 anos</option>
-    <option>Mais de 10 anos</option>
-  </select>
-
-  <label>Em quais áreas você já trabalhou?</label>
-
-  <div class="checks" id="areasExperiencia">
-    <label><input type="checkbox" value="Marcenaria"> Marcenaria</label>
-    <label><input type="checkbox" value="Serralheria"> Serralheria / Solda</label>
-    <label><input type="checkbox" value="Pintura"> Pintura</label>
-    <label><input type="checkbox" value="Montagem"> Montagem</label>
-    <label><input type="checkbox" value="Acabamento gráfico"> Acabamento gráfico</label>
-    <label><input type="checkbox" value="Adesivagem"> Adesivagem</label>
-    <label><input type="checkbox" value="Funilaria"> Funilaria</label>
-    <label><input type="checkbox" value="Tapeçaria"> Tapeçaria</label>
-    <label><input type="checkbox" value="Elétrica"> Elétrica</label>
-    <label><input type="checkbox" value="Construção"> Construção / Obras</label>
-  </div>
-
-  <label>Conte um pouco sobre seus últimos trabalhos</label>
-  <textarea id="descricao_experiencia"></textarea>
-
-  <h2>O que você gostaria de fazer?</h2>
-
-  <div class="checks" id="areasInteresse">
-    <label><input type="checkbox" value="Produção"> Produção</label>
-    <label><input type="checkbox" value="Montagem"> Montagem</label>
-    <label><input type="checkbox" value="Instalação externa"> Instalação externa</label>
-    <label><input type="checkbox" value="Marcenaria"> Marcenaria</label>
-    <label><input type="checkbox" value="Serralheria"> Serralheria</label>
-    <label><input type="checkbox" value="Acabamento gráfico"> Acabamento gráfico</label>
-    <label><input type="checkbox" value="Pintura"> Pintura</label>
-  </div>
-
-  <label>Outro interesse profissional</label>
-  <input id="outro_interesse_profissional">
-
-  <button id="botao" type="submit">ENVIAR CADASTRO</button>
-
-  <div id="mensagem"></div>
-
-</form>
-
-</div>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trabalhe Conosco | Adesul</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#f3f4f6;--card:#fff;--text:#202020;--muted:#666;--line:#dedede;--dark:#111;--green:#15803d;--red:#b00020;--soft:#f8f8f8}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+.topo{background:var(--dark);color:#fff;padding:30px 20px;text-align:center}
+.topo h1{margin:0;font-size:30px}.topo p{margin:8px 0 0;color:#ccc}
+.container{max-width:980px;margin:28px auto;padding:0 18px 40px}
+.intro,.secao{background:var(--card);border-radius:12px;padding:26px;box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:18px}
+.intro p{line-height:1.55;margin:8px 0}.aviso{background:#f5f5f5;border-left:4px solid #111;padding:14px 16px;border-radius:6px;margin-top:16px}
+h2{font-size:21px;margin:0 0 18px;border-bottom:2px solid #eee;padding-bottom:9px}
+h3{font-size:16px;margin:22px 0 8px}
+label.titulo{display:block;font-weight:bold;margin:15px 0 6px}
+.ajuda{font-size:13px;color:var(--muted);margin:4px 0 8px;line-height:1.4}
+input[type=text],input[type=tel],input[type=number],textarea,select{width:100%;padding:11px 12px;border:1px solid #ccc;border-radius:7px;background:#fff;font-size:15px;font-family:inherit}
+textarea{min-height:95px;resize:vertical}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:15px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.opcoes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:8px}
+.opcao{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border:1px solid #ddd;border-radius:7px;background:#fafafa;font-weight:normal;cursor:pointer}
+.opcao input{margin-top:2px;flex:0 0 auto}
+.niveis{width:100%;border-collapse:collapse;margin-top:10px}
+.niveis th,.niveis td{padding:10px 8px;border-bottom:1px solid #eee;text-align:left;vertical-align:middle}
+.niveis th{font-size:13px;color:#555}.niveis td:first-child{font-weight:bold;width:48%}
+.niveis select{min-width:210px}.nota-tecnica{display:flex;gap:6px;flex-wrap:wrap}.nota-tecnica label{display:inline-flex;align-items:center;justify-content:center;min-width:52px;padding:9px 11px;border:1px solid #ccc;border-radius:7px;background:#fff;cursor:pointer;font-weight:bold}.nota-tecnica input{margin-right:5px}
+.escala{background:#f7f7f7;border-radius:8px;padding:14px;margin-bottom:14px;font-size:13px;line-height:1.7}
+.condicoes{background:#fff8e6;border:1px solid #f2d68c;border-radius:8px;padding:16px;line-height:1.55}
+.oculto{display:none!important}
+.consentimento{display:flex;align-items:flex-start;gap:10px;width:100%;margin:12px 0;padding:12px;border:1px solid #ddd;border-radius:7px;background:#fafafa;line-height:1.45}.consentimento input{flex:0 0 auto;margin-top:3px}
+.botao{width:100%;margin-top:18px;padding:16px;border:0;border-radius:8px;background:#111;color:#fff;font-size:17px;font-weight:bold;cursor:pointer}
+.botao:hover{background:#333}.botao:disabled{opacity:.6;cursor:wait}
+#mensagem{display:none;margin-top:16px;padding:14px;border-radius:7px;white-space:pre-line}
+.sucesso{background:#e7f8eb;color:#14532d}.erro{background:#ffe5e5;color:#991b1b}
+.resumo-tecnico{display:none}
+@media(max-width:720px){.grid2,.grid3,.opcoes{grid-template-columns:1fr}.secao,.intro{padding:20px}.niveis,.niveis tbody,.niveis tr,.niveis td{display:block}.niveis thead{display:none}.niveis tr{border-bottom:1px solid #ddd;padding:10px 0}.niveis td{border:0;padding:4px 0}.niveis td:first-child{width:auto}.niveis select{min-width:0}}
+</style>
+</head>
+<body>
+<header class="topo">
+  <h1>ADESUL</h1>
+  <p>Cadastro para oportunidades de produção, montagem e instalação</p>
+</header>
+
+<main class="container">
+  <section class="intro">
+    <h2>Quer trabalhar com a gente?</h2>
+    <p>Este cadastro ajuda a Adesul a entender sua experiência, suas habilidades, disponibilidade e o tipo de trabalho que você procura.</p>
+    <p>Não é necessário dominar todas as áreas. Marque suas respostas com sinceridade — inclusive quando você apenas ajudou ou ainda precisa de orientação.</p>
+    <div class="aviso"><strong>Jornada normal:</strong> segunda a sexta, das 8h às 12h e das 13h às 17h48. Conforme os projetos, podem ocorrer horas extras, trabalho noturno, finais de semana, viagens e montagens externas.</div>
+  </section>
+
+  <form id="formCandidato" novalidate>
+    <section class="secao">
+      <h2>1. Dados pessoais</h2>
+      <div class="grid2">
+        <div><label class="titulo" for="nome_completo">Nome completo *</label><input id="nome_completo" type="text" required></div>
+        <div><label class="titulo" for="idade">Idade *</label><input id="idade" type="number" min="16" max="80" required></div>
+        <div><label class="titulo" for="bairro">Bairro *</label><input id="bairro" type="text" required></div>
+        <div><label class="titulo" for="cidade">Cidade *</label><input id="cidade" type="text" required></div>
+        <div><label class="titulo" for="telefone">WhatsApp / telefone *</label><input id="telefone" type="tel" required></div>
+        <div><label class="titulo" for="cnh">CNH</label><select id="cnh"><option value="">Selecione</option><option>Não possuo</option><option>A</option><option>B</option><option>AB</option><option>C</option><option>D</option><option>E</option></select></div>
+      </div>
+      <label class="titulo">Possui veículo próprio?</label>
+      <div class="opcoes">
+        <label class="opcao"><input type="radio" name="veiculo_proprio" value="true" required> Sim</label>
+        <label class="opcao"><input type="radio" name="veiculo_proprio" value="false"> Não</label>
+      </div>
+    </section>
+
+    <section class="secao">
+      <h2>2. Situação profissional</h2>
+      <label class="titulo">Está trabalhando atualmente? *</label>
+      <div class="opcoes">
+        <label class="opcao"><input type="radio" name="trabalhando_atualmente" value="true" required> Sim</label>
+        <label class="opcao"><input type="radio" name="trabalhando_atualmente" value="false"> Não</label>
+      </div>
+      <div class="grid2">
+        <div><label class="titulo" for="ultimo_emprego">Último emprego / empresa</label><input id="ultimo_emprego" type="text"></div>
+        <div><label class="titulo" for="tempo_ultimo_emprego">Quanto tempo ficou nesse emprego?</label><input id="tempo_ultimo_emprego" type="text" placeholder="Ex.: 2 anos e 6 meses"></div>
+      </div>
+      <label class="titulo" for="motivo_saida_ultimo_emprego">Motivo da saída do último emprego</label>
+      <textarea id="motivo_saida_ultimo_emprego"></textarea>
+      <label class="titulo" for="tempo_desempregado">Se estiver sem trabalhar, há quanto tempo?</label>
+      <input id="tempo_desempregado" type="text" placeholder="Ex.: 3 meses">
+    </section>
+
+    <section class="secao">
+      <h2>3. Experiência profissional</h2>
+      <label class="titulo" for="tempo_experiencia">Quanto tempo de experiência profissional você possui? *</label>
+      <select id="tempo_experiencia" required>
+        <option value="">Selecione</option><option>Sem experiência</option><option>Menos de 1 ano</option><option>1 a 3 anos</option><option>3 a 5 anos</option><option>Mais de 5 anos</option><option>Mais de 10 anos</option>
+      </select>
+
+      <label class="titulo">Em quais áreas você já trabalhou ou ajudou?</label>
+      <div class="opcoes" id="areasExperiencia">
+        <label class="opcao"><input type="checkbox" value="Marcenaria"> Marcenaria</label>
+        <label class="opcao"><input type="checkbox" value="Serralheria"> Serralheria / solda</label>
+        <label class="opcao"><input type="checkbox" value="Comunicação visual"> Comunicação visual</label>
+        <label class="opcao"><input type="checkbox" value="Montagem de eventos"> Montagem de eventos / cenografia</label>
+        <label class="opcao"><input type="checkbox" value="Montagem de móveis"> Montagem de móveis</label>
+        <label class="opcao"><input type="checkbox" value="Instalação externa"> Instalação externa</label>
+        <label class="opcao"><input type="checkbox" value="Pintura"> Pintura</label>
+        <label class="opcao"><input type="checkbox" value="Funilaria"> Funilaria</label>
+        <label class="opcao"><input type="checkbox" value="Elétrica"> Elétrica / LED</label>
+        <label class="opcao"><input type="checkbox" value="Acabamento gráfico"> Acabamento gráfico</label>
+        <label class="opcao"><input type="checkbox" value="Adesivagem"> Adesivagem</label>
+        <label class="opcao"><input type="checkbox" value="Tensionamento"> Tensionamento de lonas e tecidos</label>
+        <label class="opcao"><input type="checkbox" value="Tapeçaria"> Tapeçaria / revestimentos</label>
+        <label class="opcao"><input type="checkbox" value="Construção civil"> Construção civil / obras</label>
+      </div>
+
+      <label class="titulo" for="descricao_experiencia">Conte um pouco sobre seus últimos trabalhos</label>
+      <textarea id="descricao_experiencia" placeholder="O que você fazia no dia a dia?"></textarea>
+    </section>
+
+    <section class="secao">
+      <h2>4. Mapa técnico</h2>
+      <p class="ajuda">Para cada atividade, escolha o nível que melhor representa sua experiência real.</p>
+      <div class="escala"><strong>0</strong> Nunca fiz &nbsp; | &nbsp; <strong>1</strong> Já ajudei &nbsp; | &nbsp; <strong>2</strong> Executo com orientação &nbsp; | &nbsp; <strong>3</strong> Faço sozinho &nbsp; | &nbsp; <strong>4</strong> Domino</div>
+      <table class="niveis">
+        <thead><tr><th>Atividade</th><th>Seu nível</th></tr></thead>
+        <tbody id="tabelaNiveis"></tbody>
+      </table>
+      <div id="resumoTecnico" class="resumo-tecnico"></div>
+    </section>
+
+    <section class="secao">
+      <h2>5. Ferramentas e cursos</h2>
+      <label class="titulo">Quais ferramentas você sabe utilizar?</label>
+      <div class="opcoes" id="ferramentas">
+        <label class="opcao"><input type="checkbox" value="Parafusadeira"> Parafusadeira</label>
+        <label class="opcao"><input type="checkbox" value="Martelete"> Martelete</label>
+        <label class="opcao"><input type="checkbox" value="Serra circular"> Serra circular</label>
+        <label class="opcao"><input type="checkbox" value="Esmerilhadeira"> Esmerilhadeira</label>
+      </div>
+      <label class="titulo">Possui algum destes cursos ou certificações?</label>
+      <div class="opcoes" id="cursosCertificacoes">
+        <label class="opcao"><input type="checkbox" value="NR-10"> NR-10</label>
+        <label class="opcao"><input type="checkbox" value="NR-35"> NR-35</label>
+        <label class="opcao"><input type="checkbox" value="Solda"> Solda</label>
+        <label class="opcao"><input type="checkbox" value="Marcenaria"> Marcenaria</label>
+      </div>
+      <label class="titulo" for="detalhes_cursos">Outros cursos, certificados ou detalhes</label>
+      <textarea id="detalhes_cursos"></textarea>
+    </section>
+
+    <section class="secao">
+      <h2>6. Rotina de produção e trabalho físico</h2>
+      <label class="titulo" for="trabalho_fisico">Como você se sente em relação a trabalho físico, movimentação de materiais e montagem?</label>
+      <select id="trabalho_fisico" required>
+        <option value="">Selecione</option>
+        <option>Tenho disponibilidade e estou acostumado com trabalho físico</option>
+        <option>Consigo realizar, mas tenho pouca experiência</option>
+        <option>Tenho alguma limitação para trabalho físico</option>
+      </select>
+      <label class="titulo" for="ambiente_producao">Como você se sente trabalhando em ambiente de produção, oficina, obra ou montagem?</label>
+      <select id="ambiente_producao" required>
+        <option value="">Selecione</option>
+        <option>Estou acostumado e gosto desse ambiente</option>
+        <option>Tenho pouca experiência, mas me adapto</option>
+        <option>Prefiro atividades fora desse tipo de ambiente</option>
+      </select>
+    </section>
+
+    <section class="secao">
+      <h2>7. Disponibilidade</h2>
+      <p class="ajuda">O horário normal é das 8h às 12h e das 13h às 17h48. As demais situações são eventuais e dependem dos projetos.</p>
+      <label class="titulo">Sua disponibilidade é somente para o horário normal? *</label>
+      <div class="opcoes">
+        <label class="opcao"><input type="radio" name="somente_horario_normal" value="true" required> Sim, somente horário normal</label>
+        <label class="opcao"><input type="radio" name="somente_horario_normal" value="false"> Não, tenho disponibilidade adicional</label>
+      </div>
+      <div id="disponibilidadeExtra">
+        <h3>Marque o que você consegue atender eventualmente:</h3>
+        <div class="opcoes">
+          <label class="opcao"><input id="hora_extra_semana" type="checkbox"> Hora extra durante a semana</label>
+          <label class="opcao"><input id="noite_eventual" type="checkbox"> Trabalho noturno eventual</label>
+          <label class="opcao"><input id="sabados" type="checkbox"> Sábados</label>
+          <label class="opcao"><input id="domingos_feriados" type="checkbox"> Domingos / feriados</label>
+          <label class="opcao"><input id="viagem_rs" type="checkbox"> Viagens dentro do RS</label>
+          <label class="opcao"><input id="viagem_outros_estados" type="checkbox"> Viagens para outros estados</label>
+          <label class="opcao"><input id="pernoite_viagem" type="checkbox"> Pernoite em viagens</label>
+          <label class="opcao"><input id="montagem_fora_horario" type="checkbox"> Montagens fora do horário normal</label>
+        </div>
+      </div>
+      <label class="titulo" for="limitacao_disponibilidade">Existe alguma limitação de horário ou viagem que precisamos saber?</label>
+      <textarea id="limitacao_disponibilidade" placeholder="Se não houver, pode deixar em branco."></textarea>
+    </section>
+
+    <section class="secao">
+      <h2>8. Como você trabalha</h2>
+      <p class="ajuda">Não existe resposta “bonita”. Escolha a alternativa que mais se aproxima de como você realmente age.</p>
+
+      <label class="titulo" for="comportamento_terminou_tarefa">Quando recebe uma tarefa, o que normalmente acontece?</label>
+      <select class="comportamento" id="comportamento_terminou_tarefa" required>
+        <option value="" data-score="">Selecione</option>
+        <option value="Termino a tarefa e confiro antes de considerar concluída" data-score="2">Termino a tarefa e confiro antes de considerar concluída</option>
+        <option value="Normalmente termino, mas às vezes preciso ser lembrado ou cobrado" data-score="1">Normalmente termino, mas às vezes preciso ser lembrado ou cobrado</option>
+        <option value="Se surgir outra coisa ou chegar o fim do horário, posso deixar sem avisar" data-score="0">Se surgir outra coisa ou chegar o fim do horário, posso deixar sem avisar</option>
+      </select>
+
+      <label class="titulo" for="comportamento_nao_sabe">Quando não sabe fazer alguma coisa, o que costuma fazer?</label>
+      <select class="comportamento" id="comportamento_nao_sabe" required>
+        <option value="" data-score="">Selecione</option>
+        <option value="Pergunto ou peço orientação antes de executar" data-score="2">Pergunto ou peço orientação antes de executar</option>
+        <option value="Tento resolver sozinho e, se não der, peço ajuda" data-score="1">Tento resolver sozinho e, se não der, peço ajuda</option>
+        <option value="Faço do jeito que acho certo para não parar o trabalho" data-score="0">Faço do jeito que acho certo para não parar o trabalho</option>
+      </select>
+
+      <label class="titulo" for="comportamento_erro">Quando percebe que cometeu um erro, o que costuma fazer?</label>
+      <select class="comportamento" id="comportamento_erro" required>
+        <option value="" data-score="">Selecione</option>
+        <option value="Aviso, assumo o erro e ajudo a corrigir" data-score="2">Aviso, assumo o erro e ajudo a corrigir</option>
+        <option value="Tento corrigir sozinho primeiro e aviso se precisar" data-score="1">Tento corrigir sozinho primeiro e aviso se precisar</option>
+        <option value="Se ninguém percebeu, prefiro não comentar" data-score="0">Se ninguém percebeu, prefiro não comentar</option>
+      </select>
+
+      <label class="titulo" for="comportamento_prazo">Quando o prazo está apertado, como você reage?</label>
+      <select class="comportamento" id="comportamento_prazo" required>
+        <option value="" data-score="">Selecione</option>
+        <option value="Priorizo o que precisa ser feito e aviso cedo se houver risco de atraso" data-score="2">Priorizo o que precisa ser feito e aviso cedo se houver risco de atraso</option>
+        <option value="Acelero o máximo que consigo, mesmo ficando menos organizado" data-score="1">Acelero o máximo que consigo, mesmo ficando menos organizado</option>
+        <option value="Espero orientação ou cobrança para saber o que fazer primeiro" data-score="0">Espero orientação ou cobrança para saber o que fazer primeiro</option>
+      </select>
+
+      <label class="titulo" for="comportamento_organizacao">Como você lida com organização de ferramentas, materiais e local de trabalho?</label>
+      <select class="comportamento" id="comportamento_organizacao" required>
+        <option value="" data-score="">Selecione</option>
+        <option value="Mantenho organizado durante o trabalho e guardo ao finalizar" data-score="2">Mantenho organizado durante o trabalho e guardo ao finalizar</option>
+        <option value="Organizo quando termino ou quando me pedem" data-score="1">Organizo quando termino ou quando me pedem</option>
+        <option value="Organização não é uma prioridade para mim durante o trabalho" data-score="0">Organização não é uma prioridade para mim durante o trabalho</option>
+      </select>
+
+      <label class="titulo" for="comportamento_pontualidade">Como é sua relação com horário e pontualidade?</label>
+      <select class="comportamento" id="comportamento_pontualidade" required>
+        <option value="" data-score="">Selecione</option>
+        <option value="Procuro chegar no horário combinado ou alguns minutos antes" data-score="2">Procuro chegar no horário combinado ou alguns minutos antes</option>
+        <option value="Às vezes atraso alguns minutos, mas aviso quando acontece" data-score="1">Às vezes atraso alguns minutos, mas aviso quando acontece</option>
+        <option value="Tenho dificuldade frequente para cumprir horário" data-score="0">Tenho dificuldade frequente para cumprir horário</option>
+      </select>
+    </section>
+
+    <section class="secao">
+      <h2>9. O que você gostaria de fazer na Adesul?</h2>
+      <div class="opcoes" id="areasInteresse">
+        <label class="opcao"><input type="checkbox" value="Produção"> Produção</label>
+        <label class="opcao"><input type="checkbox" value="Montagem"> Montagem</label>
+        <label class="opcao"><input type="checkbox" value="Instalação externa"> Instalação externa</label>
+        <label class="opcao"><input type="checkbox" value="Marcenaria"> Marcenaria</label>
+        <label class="opcao"><input type="checkbox" value="Serralheria"> Serralheria</label>
+        <label class="opcao"><input type="checkbox" value="Acabamento gráfico"> Acabamento gráfico</label>
+        <label class="opcao"><input type="checkbox" value="Pintura"> Pintura</label>
+      </div>
+      <label class="titulo" for="outro_interesse_profissional">Existe outra função ou profissão que você gostaria de exercer?</label>
+      <input id="outro_interesse_profissional" type="text" placeholder="Ex.: motorista, logística, outra área...">
+    </section>
+
+    <section class="secao">
+      <h2>10. Condições da oportunidade</h2>
+      <div class="condicoes">
+        <strong>Condições informadas para a vaga de entrada:</strong><br>
+        Remuneração de R$ 2.448,20 (salário-base de R$ 2.124,00 + insalubridade), R$ 315 de alimentação, vale-transporte e horas extras quando realizadas.<br>
+        Horário normal: segunda a sexta, 8h–12h e 13h–17h48. O trabalho é operacional e pode envolver montagens externas, movimentação de materiais, hora extra, noite, final de semana e viagem conforme o projeto.
+      </div>
+
+      <label class="titulo" for="aceita_condicoes">Essas condições são compatíveis com o que você procura? *</label>
+      <select id="aceita_condicoes" required>
+        <option value="">Selecione</option>
+        <option value="Sim">Sim, são compatíveis</option>
+        <option value="Tenho dúvidas">Tenho dúvidas antes de confirmar</option>
+        <option value="Não">Não são compatíveis</option>
+      </select>
+
+      <label class="titulo" for="duvida_condicoes">Se marcou “Tenho dúvidas”, conte o que precisa esclarecer</label>
+      <textarea id="duvida_condicoes"></textarea>
+
+      <label class="titulo">Você consegue chegar ao trabalho no bairro Sarandi às 8h? *</label>
+      <div class="opcoes">
+        <label class="opcao"><input type="radio" name="consegue_chegar_8h" value="true" required> Sim</label>
+        <label class="opcao"><input type="radio" name="consegue_chegar_8h" value="false"> Não</label>
+      </div>
+
+      <label class="titulo" for="meio_transporte">Como pretende ir ao trabalho?</label>
+      <input id="meio_transporte" type="text" placeholder="Ex.: ônibus, carro, moto, bicicleta...">
+
+      <div class="grid2">
+        <div>
+          <label class="titulo" for="disponibilidade_inicio">Quando poderia iniciar?</label>
+          <select id="disponibilidade_inicio">
+            <option value="">Selecione</option><option>Imediatamente</option><option>Em até 7 dias</option><option>Em até 15 dias</option><option>Em até 30 dias</option><option>Outra data</option>
+          </select>
+        </div>
+        <div><label class="titulo" for="outra_disponibilidade_inicio">Se escolheu outra data, qual?</label><input id="outra_disponibilidade_inicio" type="text"></div>
+      </div>
+    </section>
+
+    <section class="secao">
+      <h2>11. Referência profissional</h2>
+      <label class="titulo">Possui alguém que possa dar referência do seu trabalho?</label>
+      <div class="opcoes">
+        <label class="opcao"><input type="radio" name="possui_referencia" value="true"> Sim</label>
+        <label class="opcao"><input type="radio" name="possui_referencia" value="false"> Não</label>
+      </div>
+      <div id="dadosReferencia" class="oculto">
+        <div class="grid2">
+          <div><label class="titulo" for="referencia_nome">Nome da referência</label><input id="referencia_nome" type="text"></div>
+          <div><label class="titulo" for="referencia_empresa">Empresa</label><input id="referencia_empresa" type="text"></div>
+          <div><label class="titulo" for="referencia_telefone">Telefone</label><input id="referencia_telefone" type="tel"></div>
+          <div><label class="titulo" for="referencia_relacao">Qual era a relação profissional?</label><input id="referencia_relacao" type="text" placeholder="Ex.: supervisor, colega, cliente..."></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="secao">
+      <h2>12. Finalização</h2>
+      <label class="titulo" for="informacao_adicional">Existe alguma informação adicional que gostaria de nos contar?</label>
+      <textarea id="informacao_adicional"></textarea>
+
+      <label class="consentimento"><input id="confirma_veracidade" type="checkbox" required> Confirmo que as informações prestadas neste cadastro são verdadeiras. *</label>
+      <label class="consentimento"><input id="autoriza_dados_selecao" type="checkbox" required> Autorizo a Adesul a utilizar estes dados exclusivamente para processos de seleção e contato profissional. *</label>
+
+      <button class="botao" id="botao" type="submit">ENVIAR CADASTRO</button>
+      <div id="mensagem"></div>
+    </section>
+  </form>
+</main>
 
 <script>
-  const SUPABASE_URL = "https://hetkropzbpsybgbavwfd.supabase.co";
-
-  const SUPABASE_KEY = "sb_publishable_rhrhtkOhmIX8DpFlQFvEEg_IdaTVtgu";
-
-  const supabaseClient = supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
-
-  function selecionados(id) {
-    return Array.from(
-      document.querySelectorAll("#" + id + " input:checked")
-    ).map(item => item.value);
+const SUPABASE_URL = "https://hetkropzbpsybgbavwfd.supabase.co";
+const SUPABASE_KEY = "sb_publishable_rhrhtkOhmIX8DpFlQFvEEg_IdaTVtgu";
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY,
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false
+    }
   }
+);
 
-  document
-    .getElementById("formCandidato")
-    .addEventListener("submit", async function(event) {
+const habilidades = [
+  ["nivel_marcenaria","Marcenaria"],
+  ["nivel_serralheria","Serralheria"],
+  ["nivel_comunicacao_visual","Comunicação visual"],
+  ["nivel_montagem_eventos","Montagem de eventos / cenografia"],
+  ["nivel_montagem_moveis","Montagem de móveis"],
+  ["nivel_instalacao_externa","Instalação externa"],
+  ["nivel_pintura","Pintura"],
+  ["nivel_funilaria","Funilaria"],
+  ["nivel_eletrica","Elétrica / LED"],
+  ["nivel_acabamento_grafico","Acabamento gráfico"],
+  ["nivel_adesivagem","Adesivagem"],
+  ["nivel_tensionamento","Tensionamento de lonas e tecidos"],
+  ["nivel_tapecaria_revestimentos","Tapeçaria / revestimentos"],
+  ["nivel_construcao_civil","Construção civil"]
+];
 
-      event.preventDefault();
+function montarMapaTecnico(){
+  const corpo = document.getElementById("tabelaNiveis");
+  corpo.innerHTML = "";
+  habilidades.forEach(([campo,nome])=>{
+    const tr = document.createElement("tr");
+    const tdNome = document.createElement("td");
+    const tdNivel = document.createElement("td");
+    tdNome.textContent = nome;
 
-      const botao = document.getElementById("botao");
-      const mensagem = document.getElementById("mensagem");
+    const bloco = document.createElement("div");
+    bloco.className = "nota-tecnica";
 
-      botao.disabled = true;
-      botao.innerText = "ENVIANDO...";
-
-      const dados = {
-        nome_completo: document.getElementById("nome").value,
-        idade: Number(document.getElementById("idade").value),
-        bairro: document.getElementById("bairro").value,
-        cidade: document.getElementById("cidade").value,
-        telefone: document.getElementById("telefone").value,
-
-        tempo_experiencia:
-          document.getElementById("tempo_experiencia").value,
-
-        areas_experiencia:
-          selecionados("areasExperiencia"),
-
-        descricao_experiencia:
-          document.getElementById("descricao_experiencia").value,
-
-        areas_interesse:
-          selecionados("areasInteresse"),
-
-        outro_interesse_profissional:
-          document.getElementById("outro_interesse_profissional").value
-      };
-
-      const { error } = await supabaseClient
-        .from("candidatos")
-        .insert([dados]);
-
-      if (error) {
-
-        console.error(error);
-
-        mensagem.style.display = "block";
-        mensagem.style.background = "#ffe5e5";
-        mensagem.innerText =
-          "Não foi possível enviar. Tente novamente.";
-
-      } else {
-
-        mensagem.style.display = "block";
-        mensagem.style.background = "#e5ffe9";
-        mensagem.innerText =
-          "Cadastro enviado com sucesso! Obrigado pelo interesse em trabalhar conosco.";
-
-        document
-          .getElementById("formCandidato")
-          .reset();
-      }
-
-      botao.disabled = false;
-      botao.innerText = "ENVIAR CADASTRO";
+    [0,1,2,3,4].forEach(nota=>{
+      const label = document.createElement("label");
+      const radio = document.createElement("input");
+      radio.type = "radio";
+      radio.name = campo;
+      radio.value = String(nota);
+      radio.required = true;
+      if(nota === 0) radio.checked = true;
+      radio.addEventListener("change", atualizarResumoTecnico);
+      label.appendChild(radio);
+      label.appendChild(document.createTextNode(String(nota)));
+      bloco.appendChild(label);
     });
-</script>
 
+    tdNivel.appendChild(bloco);
+    tr.appendChild(tdNome);
+    tr.appendChild(tdNivel);
+    corpo.appendChild(tr);
+  });
+  atualizarResumoTecnico();
+}
+
+function selecionados(id){
+  return Array.from(document.querySelectorAll("#"+id+" input[type=checkbox]:checked")).map(i=>i.value);
+}
+function radioBoolean(nome){
+  const el = document.querySelector('input[name="'+nome+'"]:checked');
+  return el ? el.value === "true" : null;
+}
+function valor(id){ return document.getElementById(id).value.trim(); }
+function niveisTecnicos(){
+  return habilidades.map(([campo])=>{
+    const el = document.querySelector('input[name="'+campo+'"]:checked');
+    return el ? Number(el.value) : 0;
+  });
+}
+
+function calcularPontuacaoTecnica(){
+  const n = niveisTecnicos().sort((a,b)=>b-a);
+  return (n[0]||0)*3 + (n[1]||0)*2 + (n[2]||0);
+}
+function faixaTecnica(pontos){
+  if(pontos>=15) return "Forte";
+  if(pontos>=8) return "Intermediário";
+  if(pontos>=1) return "Inicial";
+  return "Sem aderência técnica";
+}
+function atualizarResumoTecnico(){
+  const pontos = calcularPontuacaoTecnica();
+  document.getElementById("resumoTecnico").textContent = "Pontuação técnica estimada: "+pontos+"/24 · "+faixaTecnica(pontos);
+}
+function scoreSelect(id){
+  const s = document.getElementById(id);
+  const opt = s.options[s.selectedIndex];
+  return opt && opt.dataset.score !== "" && opt.dataset.score !== undefined ? Number(opt.dataset.score) : 0;
+}
+function calcularComportamental(){
+  return ["comportamento_terminou_tarefa","comportamento_nao_sabe","comportamento_erro","comportamento_prazo","comportamento_organizacao","comportamento_pontualidade"]
+    .reduce((s,id)=>s+scoreSelect(id),0);
+}
+function faixaComportamental(pontos){
+  if(pontos>=10) return "Muito aderente";
+  if(pontos>=7) return "Adequado";
+  if(pontos>=4) return "Atenção";
+  return "Baixa aderência";
+}
+function normalizarTexto(texto){
+  return String(texto || "").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim();
+}
+function calcularAfinidade(){
+  const areas = selecionados("areasInteresse");
+  const outro = normalizarTexto(valor("outro_interesse_profissional"));
+  const externos = ["motorista","conferente","logistica","almoxarife","almoxarifado","manobrista","administrativo","administracao","recepcao","vendas","vendedor","porteiro","seguranca"];
+  const fora = externos.some(t => outro.includes(t));
+  if(areas.length >= 2 && !fora) return "Alta";
+  if(areas.length >= 1) return "Média";
+  if(fora) return "Baixa";
+  return "Média";
+}
+function calcularAlertas(tecnica,comportamental){
+  const dominios = niveisTecnicos().filter(n=>n===4).length;
+  const experiencia = valor("tempo_experiencia");
+  const alertaProfissional = tecnica >= 20 && (dominios >= 2 || experiencia === "Mais de 10 anos");
+  const alertaComportamental = comportamental <= 6 || scoreSelect("comportamento_erro") === 0;
+  const alertaOperacional = radioBoolean("somente_horario_normal") === true || radioBoolean("consegue_chegar_8h") === false || valor("aceita_condicoes") === "Não";
+  return {
+    alerta_profissional_acima_vaga: alertaProfissional,
+    alerta_comportamental: alertaComportamental,
+    alerta_restricao_operacional: alertaOperacional
+  };
+}
+function calcularClassificacao(tecnica,comportamental,afinidade,alertas){
+  if(valor("aceita_condicoes") === "Não" || radioBoolean("consegue_chegar_8h") === false) return "Não aderente";
+  if(alertas.alerta_comportamental || alertas.alerta_restricao_operacional) return "Analisar";
+  if(tecnica >= 15 && comportamental >= 7 && afinidade !== "Baixa") return "Prioridade";
+  if(tecnica < 15 && comportamental >= 7 && afinidade !== "Baixa") return "Auxiliar / Potencial";
+  return "Analisar";
+}
+
+function validarFormulario(){
+  const form = document.getElementById("formCandidato");
+  if(!form.checkValidity()){ form.reportValidity(); return false; }
+  const somenteNormal = radioBoolean("somente_horario_normal");
+  if(somenteNormal===false){
+    const extras = ["hora_extra_semana","noite_eventual","sabados","domingos_feriados","viagem_rs","viagem_outros_estados","pernoite_viagem","montagem_fora_horario"].some(id=>document.getElementById(id).checked);
+    if(!extras){
+      mostrarMensagem("Marque pelo menos uma disponibilidade adicional ou escolha “somente horário normal”.", false);
+      document.getElementById("hora_extra_semana").focus();
+      return false;
+    }
+  }
+  return true;
+}
+function mostrarMensagem(texto,sucesso){
+  const el = document.getElementById("mensagem");
+  el.style.display = "block";
+  el.className = sucesso ? "sucesso" : "erro";
+  el.textContent = texto;
+}
+
+function montarPayload(){
+  const pontuacaoTecnica = calcularPontuacaoTecnica();
+  const pontuacaoComportamental = calcularComportamental();
+  const afinidade = calcularAfinidade();
+  const alertas = calcularAlertas(pontuacaoTecnica,pontuacaoComportamental);
+  const classificacao = calcularClassificacao(pontuacaoTecnica,pontuacaoComportamental,afinidade,alertas);
+
+  const validacoesTecnicas = {
+    versao_formulario: "2026-09-30-final-v3",
+    regra_tecnica: "3 melhores niveis: melhor x3 + segunda x2 + terceira x1",
+    faixa_tecnica: faixaTecnica(pontuacaoTecnica),
+    faixa_comportamental: faixaComportamental(pontuacaoComportamental),
+    niveis: Object.fromEntries(habilidades.map(([campo]) => {
+      const el = document.querySelector('input[name="'+campo+'"]:checked');
+      return [campo, el ? Number(el.value) : 0];
+    }))
+  };
+
+  const dados = {
+    nome_completo: valor("nome_completo"),
+    idade: Number(valor("idade")),
+    bairro: valor("bairro"),
+    cidade: valor("cidade"),
+    telefone: valor("telefone"),
+    cnh: valor("cnh") || null,
+    veiculo_proprio: radioBoolean("veiculo_proprio"),
+    trabalhando_atualmente: radioBoolean("trabalhando_atualmente"),
+    ultimo_emprego: valor("ultimo_emprego") || null,
+    tempo_ultimo_emprego: valor("tempo_ultimo_emprego") || null,
+    motivo_saida_ultimo_emprego: valor("motivo_saida_ultimo_emprego") || null,
+    tempo_desempregado: valor("tempo_desempregado") || null,
+    tempo_experiencia: valor("tempo_experiencia"),
+    areas_experiencia: selecionados("areasExperiencia"),
+    descricao_experiencia: valor("descricao_experiencia") || null,
+    ferramentas: selecionados("ferramentas"),
+    cursos_certificacoes: selecionados("cursosCertificacoes"),
+    detalhes_cursos: valor("detalhes_cursos") || null,
+    trabalho_fisico: valor("trabalho_fisico"),
+    ambiente_producao: valor("ambiente_producao"),
+    hora_extra_semana: document.getElementById("hora_extra_semana").checked,
+    noite_eventual: document.getElementById("noite_eventual").checked,
+    sabados: document.getElementById("sabados").checked,
+    domingos_feriados: document.getElementById("domingos_feriados").checked,
+    viagem_rs: document.getElementById("viagem_rs").checked,
+    viagem_outros_estados: document.getElementById("viagem_outros_estados").checked,
+    pernoite_viagem: document.getElementById("pernoite_viagem").checked,
+    montagem_fora_horario: document.getElementById("montagem_fora_horario").checked,
+    somente_horario_normal: radioBoolean("somente_horario_normal"),
+    limitacao_disponibilidade: valor("limitacao_disponibilidade") || null,
+    comportamento_terminou_tarefa: valor("comportamento_terminou_tarefa"),
+    comportamento_nao_sabe: valor("comportamento_nao_sabe"),
+    comportamento_erro: valor("comportamento_erro"),
+    comportamento_prazo: valor("comportamento_prazo"),
+    comportamento_organizacao: valor("comportamento_organizacao"),
+    comportamento_pontualidade: valor("comportamento_pontualidade"),
+    areas_interesse: selecionados("areasInteresse"),
+    outro_interesse_profissional: valor("outro_interesse_profissional") || null,
+    aceita_condicoes: valor("aceita_condicoes"),
+    duvida_condicoes: valor("duvida_condicoes") || null,
+    consegue_chegar_8h: radioBoolean("consegue_chegar_8h"),
+    meio_transporte: valor("meio_transporte") || null,
+    disponibilidade_inicio: valor("disponibilidade_inicio") || null,
+    outra_disponibilidade_inicio: valor("outra_disponibilidade_inicio") || null,
+    possui_referencia: radioBoolean("possui_referencia"),
+    referencia_nome: valor("referencia_nome") || null,
+    referencia_empresa: valor("referencia_empresa") || null,
+    referencia_telefone: valor("referencia_telefone") || null,
+    referencia_relacao: valor("referencia_relacao") || null,
+    informacao_adicional: valor("informacao_adicional") || null,
+    confirma_veracidade: document.getElementById("confirma_veracidade").checked,
+    autoriza_dados_selecao: document.getElementById("autoriza_dados_selecao").checked,
+    pontuacao_tecnica: pontuacaoTecnica,
+    pontuacao_comportamental: pontuacaoComportamental,
+    afinidade_profissional: afinidade,
+    classificacao: classificacao,
+    alerta_profissional_acima_vaga: alertas.alerta_profissional_acima_vaga,
+    alerta_comportamental: alertas.alerta_comportamental,
+    alerta_restricao_operacional: alertas.alerta_restricao_operacional,
+    status: "novo",
+    validacoes_tecnicas: validacoesTecnicas
+  };
+
+  habilidades.forEach(([campo])=>{
+    const el = document.querySelector('input[name="'+campo+'"]:checked');
+    dados[campo] = el ? Number(el.value) : 0;
+  });
+  return dados;
+}
+
+document.querySelectorAll('input[name="somente_horario_normal"]').forEach(el=>{
+  el.addEventListener("change",()=>{
+    const somente = radioBoolean("somente_horario_normal")===true;
+    const box = document.getElementById("disponibilidadeExtra");
+    box.style.opacity = somente ? ".45" : "1";
+    box.querySelectorAll("input").forEach(i=>{ i.disabled = somente; if(somente) i.checked = false; });
+  });
+});
+
+document.querySelectorAll('input[name="possui_referencia"]').forEach(el=>{
+  el.addEventListener("change",()=>{
+    const sim = radioBoolean("possui_referencia")===true;
+    document.getElementById("dadosReferencia").classList.toggle("oculto",!sim);
+  });
+});
+
+document.getElementById("formCandidato").addEventListener("submit",async event=>{
+  event.preventDefault();
+  if(!validarFormulario()) return;
+
+  const botao = document.getElementById("botao");
+  botao.disabled = true;
+  botao.textContent = "ENVIANDO...";
+  mostrarMensagem("Enviando seu cadastro...", true);
+
+  try{
+    const dados = montarPayload();
+    const { error } = await supabaseClient.from("candidatos").insert([dados]);
+    if(error) throw error;
+
+    mostrarMensagem("✅ Cadastro enviado com sucesso!\n\nObrigado pelo interesse em trabalhar conosco. A Adesul recebeu suas informações para análise.", true);
+    event.target.reset();
+    document.getElementById("dadosReferencia").classList.add("oculto");
+    document.getElementById("disponibilidadeExtra").style.opacity = "1";
+    document.querySelectorAll("#disponibilidadeExtra input").forEach(i=>i.disabled=false);
+    habilidades.forEach(([campo])=>{
+    const el = document.querySelector('input[name="'+campo+'"][value="0"]');
+    if(el) el.checked = true;
+  });
+    atualizarResumoTecnico();
+    const confirmacao = document.getElementById("mensagem");
+    confirmacao.style.fontWeight = "bold";
+    confirmacao.style.fontSize = "16px";
+    confirmacao.scrollIntoView({behavior:"smooth", block:"center"});
+  }catch(error){
+    console.error(error);
+    mostrarMensagem(
+      "Não foi possível enviar o cadastro.\n\nDetalhe técnico: " +
+      (error.message || "erro desconhecido") +
+      "\n\nSe o problema continuar, informe esta mensagem à Adesul.",
+      false
+    );
+  }finally{
+    botao.disabled = false;
+    botao.textContent = "ENVIAR CADASTRO";
+  }
+});
+
+montarMapaTecnico();
+</script>
 </body>
 </html>
