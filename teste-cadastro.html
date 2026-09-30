@@ -27,7 +27,7 @@ textarea{min-height:95px;resize:vertical}
 .niveis{width:100%;border-collapse:collapse;margin-top:10px}
 .niveis th,.niveis td{padding:10px 8px;border-bottom:1px solid #eee;text-align:left;vertical-align:middle}
 .niveis th{font-size:13px;color:#555}.niveis td:first-child{font-weight:bold;width:48%}
-.niveis select{min-width:210px}
+.niveis select{min-width:210px}.nota-tecnica{display:flex;gap:6px;flex-wrap:wrap}.nota-tecnica label{display:inline-flex;align-items:center;justify-content:center;min-width:52px;padding:9px 11px;border:1px solid #ccc;border-radius:7px;background:#fff;cursor:pointer;font-weight:bold}.nota-tecnica input{margin-right:5px}
 .escala{background:#f7f7f7;border-radius:8px;padding:14px;margin-bottom:14px;font-size:13px;line-height:1.7}
 .condicoes{background:#fff8e6;border:1px solid #f2d68c;border-radius:8px;padding:16px;line-height:1.55}
 .oculto{display:none!important}
@@ -364,22 +364,31 @@ const habilidades = [
 
 function montarMapaTecnico(){
   const corpo = document.getElementById("tabelaNiveis");
+  corpo.innerHTML = "";
   habilidades.forEach(([campo,nome])=>{
     const tr = document.createElement("tr");
     const tdNome = document.createElement("td");
     const tdNivel = document.createElement("td");
-    const select = document.createElement("select");
-    select.id = campo;
-    select.required = true;
-    [[0,"0 - Nunca fiz"],[1,"1 - Já ajudei"],[2,"2 - Executo com orientação"],[3,"3 - Faço sozinho"],[4,"4 - Domino"]].forEach(([valor,texto])=>{
-      const opt = document.createElement("option");
-      opt.value = String(valor);
-      opt.textContent = texto;
-      select.appendChild(opt);
-    });
-    select.addEventListener("change", atualizarResumoTecnico);
     tdNome.textContent = nome;
-    tdNivel.appendChild(select);
+
+    const bloco = document.createElement("div");
+    bloco.className = "nota-tecnica";
+
+    [0,1,2,3,4].forEach(nota=>{
+      const label = document.createElement("label");
+      const radio = document.createElement("input");
+      radio.type = "radio";
+      radio.name = campo;
+      radio.value = String(nota);
+      radio.required = true;
+      if(nota === 0) radio.checked = true;
+      radio.addEventListener("change", atualizarResumoTecnico);
+      label.appendChild(radio);
+      label.appendChild(document.createTextNode(String(nota)));
+      bloco.appendChild(label);
+    });
+
+    tdNivel.appendChild(bloco);
     tr.appendChild(tdNome);
     tr.appendChild(tdNivel);
     corpo.appendChild(tr);
@@ -395,7 +404,12 @@ function radioBoolean(nome){
   return el ? el.value === "true" : null;
 }
 function valor(id){ return document.getElementById(id).value.trim(); }
-function niveisTecnicos(){ return habilidades.map(([campo])=>Number(document.getElementById(campo).value || 0)); }
+function niveisTecnicos(){
+  return habilidades.map(([campo])=>{
+    const el = document.querySelector('input[name="'+campo+'"]:checked');
+    return el ? Number(el.value) : 0;
+  });
+}
 
 function calcularPontuacaoTecnica(){
   const n = niveisTecnicos().sort((a,b)=>b-a);
