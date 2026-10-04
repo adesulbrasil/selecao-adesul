@@ -1,0 +1,1 @@
+window.MURAL_CONFIG={SUPABASE_URL:"https://hetkropzbpsybgbavwfd.supabase.co",SUPABASE_KEY:"sb_publishable_rhrhtkOhmIX8DpFlQFvEEg_IdaTVtgu"};
