@@ -1,0 +1,1 @@
+Mural Operacional Adesul V1
