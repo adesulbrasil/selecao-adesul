@@ -1,1 +1,8 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mural Adesul</title><link rel="stylesheet" href="styles.css"></head><body><header><div><h1>ADESUL — Mural Operacional</h1><small>Complemento operacional ao Muby</small></div></header><div class="wrap"><div class="card"><h2>V1 do Mural</h2><p>Base criada. Interface administrativa em implantação.</p><p><a href="tv.html">Abrir tela da Smart TV</a></p></div></div></body></html>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mural Adesul</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.min.js"></script><link rel="stylesheet" href="styles.css"></head><body>
+<header><div><h1>ADESUL — Mural Operacional</h1><small>Complemento operacional ao Muby</small></div><div class="actions"><a href="tv.html" target="_blank"><button class="ghost">Abrir TV</button></a><button id="logout" class="ghost">Sair</button></div></header>
+<div class="wrap">
+<section id="login" class="card"><h2>Acesso interno</h2><p class="muted">Mesmo login do RH.</p><form id="loginForm"><label>E-mail</label><input id="email" type="email" required><label>Senha</label><input id="senha" type="password" required><button>Entrar</button><div id="msg"></div></form></section>
+<main id="app" class="hide"><div class="tabs"><button id="tabOs" class="tab ativo">Trabalhos / OS</button><button id="tabTarefas" class="tab">Tarefas de rua</button></div><section id="area"></section></main>
+</div>
+<dialog id="dlg"><div class="modalhead"><strong id="dlgTitle"></strong><button class="ghost" id="fechar">Fechar</button></div><div class="modalbody" id="dlgBody"></div></dialog>
+<script src="config.js"></script><script src="app.js"></script></body></html>
